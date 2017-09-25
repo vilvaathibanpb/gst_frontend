@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React + Redux - User Registration and Login Example & Tutorial</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+    <style>
+        a { cursor: pointer; }
+        .help-block { font-size: 12px; }
+
+        *{
+    font-family: 'Open Sans',sans-serif;
+    text-align: center!important;
+}
+
+input{
+    text-align: left!important;    
+}
+textarea{
+    text-align: left!important;    
+}
+ul li{
+    margin-top: 3%;
+    text-align: justify!important;
+}
+ul {
+  list-style: none;
+  list-style-position: outside;
+  list-style-image: url(../assets/img/bullet.png);
+}
+.nav-bg {
+        background: linear-gradient(90deg, #d5bd85 50%, #3c3c54 50%);
+}
+
+.data-form{
+    background: #3c3c54;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 0;
+}
+.desktop-flex{
+    display: flex!important;
+}
+.logo-mobile{
+    display: none;
+}
+.logo-pc{
+    display: block;
+}
+.nav-color{
+    color:#fff!important;
+    font-size:14px;
+    opacity: 1;
+}
+/*li span { position: relative; left: -10px; }*/
+
+@media only screen and (max-width: 760px) {
+    /* For mobile phones: */
+    .desktop-flex{
+        display: block!important;
+    }
+
+    .nav-bg {
+        background:#d5bd85 ;
+        
+    }
+    .logo-mobile{
+        display: block;
+        height: 60px;
+
+    }
+    .logo-pc{
+        display: none;
+    }
+    .navbar-height{
+        height: 110px;
+    }
+    .mobile-nav{
+        margin-top: 9%;
+    }
+    div{
+        border: none;
+    }
+    .nav-color{
+        color:#3c3c54!important;
+        font-size:14px;
+        opacity: 1;
+        font-weight: bold;
+        text-align: right!important;
+    }
+    .li-right{
+        margin-right: 10px;
+        text-align: right;
+    }
+}
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <!-- credits -->
+    <div class="text-center">
+        <p>
+            <a href="http://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example" target="_top">React + Redux - User Registration and Login Tutorial & Example</a>
+        </p>
+        <p>
+            <a href="http://jasonwatmore.com" target="_top">JasonWatmore.com</a>
+        </p>
+    </div>
+</body>
+</html>
