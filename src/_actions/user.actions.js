@@ -8,7 +8,8 @@ export const userActions = {
     logout,
     register,
     getAll,
-    delete: _delete
+    delete: _delete,
+    generate_otp
 };
 
 function login(username, password) {
@@ -59,6 +60,29 @@ function register(user) {
     function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+}
+
+function generate_otp(useremail, usermobile, usertype) {
+    return dispatch => {
+        dispatch(request(useremail, usermobile, usertype));
+
+        userService.generate_otp(useremail, usermobile, usertype)
+            .then(
+                user => { 
+                    dispatch(success());
+                    // history.push('/login');
+                    dispatch(alertActions.success('Registration successful'));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.OTP_REQUEST, useremail, usermobile, usertype } }
+    function success(user) { return { type: userConstants.OTP_SUCCESS, useremail, usermobile, usertype } }
+    function failure(error) { return { type: userConstants.OTP_FAILURE, error } }
 }
 
 function getAll() {

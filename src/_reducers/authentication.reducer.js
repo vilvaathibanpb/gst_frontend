@@ -23,3 +23,33 @@ export function authentication(state = initialState, action) {
       return state
   }
 }
+
+export function otp_generation(state = {
+  otp_request:false,
+  otp_success:false,
+  email: {},
+  mobile: {},
+  type: {}
+}, action) {
+  switch (action.type) {
+    case userConstants.OTP_REQUEST:
+      return {
+        otp_request: true,
+        email: action.useremail,
+        mobile: action.usermobile,
+        type: action.type
+      };
+    case userConstants.OTP_SUCCESS:
+      return {
+        otp_request:false,        
+        otp_success:true,
+        email: action.useremail,
+        mobile: action.usermobile,
+        type: action.type
+      };
+    case userConstants.OTP_FAILURE:
+      return {};
+    default:
+      return state
+  }
+}

@@ -7,17 +7,26 @@ export const userService = {
     getAll,
     getById,
     update,
-    delete: _delete
+    delete: _delete,
+    generate_otp
 };
 
 function login(username, password) {
     const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'key':'docketgst' },
+        // body: JSON.stringify({ username, password })
     };
 
-    return fetch('/users/authenticate', requestOptions)
+    let login_url = "";
+
+    if(username.toString().indexOf("@") >= 0){
+        login_url = 'http://gst.edocketapp.com/api/v0/user/signin/?email='+username+'&otp='+password+'&type=otp'
+    }else{
+        login_url = 'http://gst.edocketapp.com/api/v0/user/signin/?mobile='+username+'&otp='+password+'&type=otp'
+    }
+
+    return fetch(login_url, requestOptions)
         .then(response => {
             if (!response.ok) { 
                 return Promise.reject(response.statusText);
@@ -66,7 +75,26 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch('http://gst.edocketapp.com/api/v0/users/signup', requestOptions).then(handleResponse);
+    return fetch('http://gst.edocketapp.com/api/v0/user/signup', requestOptions).then(handleResponse);
+}
+
+function generate_otp(useremail, usermobile, usertype) {
+    
+    let generate_otp_url = "";
+
+    if(useremail.toString().indexOf("@") >= 0){
+        generate_otp_url = 'http://gst.edocketapp.com/api/v0/user/generate_otp/?email='+useremail+'&type='+usertype
+    }else{
+        generate_otp_url = 'http://gst.edocketapp.com/api/v0/user/generate_otp/?mobile='+usermobile+'&type='+usertype
+    }
+
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'key':'docketgst' },
+        // body: JSON.stringify(username)
+    };
+
+    return fetch( generate_otp_url, requestOptions).then(handleResponse);
 }
 
 function update(user) {

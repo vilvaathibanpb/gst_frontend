@@ -12,3 +12,4 @@ export function registration(state = {}, action) {
       return state
   }
 }
+

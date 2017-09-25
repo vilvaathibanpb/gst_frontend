@@ -13,28 +13,64 @@ class LoginPage extends React.Component {
         this.props.dispatch(userActions.logout());
 
         this.state = {
-            username: '',
-            password: '',
-            submitted: false
+            user : {
+                email: '',
+                mobile:'',
+                password: '',
+                type:'otp',
+            },
+            submitted: false,
+            otp_generated: false
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleOTPChange = this.handleOTPChange.bind(this);
+        this.handleOTPSubmit = this.handleOTPSubmit.bind(this);
     }
+
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        const { user } = this.state;
+        this.setState({
+            user: {
+                ...user,
+                email: value, mobile: value
+            }
+        });
+    }
+
+    handleOTPChange(e) {
+        const { name, value } = e.target;
+        const { user } = this.state;
+        this.setState({
+            user: {
+                ...user,
+                password: value
+            }
+        });
+    }
+
+     handleOTPSubmit(e) {
+        e.preventDefault();
+
+        this.setState({ otp_generated: true });
+        const { user } = this.state;
+        const { dispatch } = this.props;
+        if (user.email && user.mobile) {
+            dispatch(userActions.generate_otp(user.email , user.mobile , user.type));
+        }
     }
 
     handleSubmit(e) {
         e.preventDefault();
 
         this.setState({ submitted: true });
-        const { username, password } = this.state;
+        const { user } = this.state;
         const { dispatch } = this.props;
-        if (username && password) {
-            dispatch(userActions.login(username, password));
+        if (user.email && user.mobile && user.password) {
+            dispatch(userActions.login(user.email , user.password));
         }
     }
 
@@ -95,10 +131,16 @@ class LoginPage extends React.Component {
                                     </div>
                                     <form style={{marginTop: '10%'}}>
                                         <div className="form-group">
-                                            <input type="text" className="form-control" onChange={this.handleChange} name="email" id="register_email" placeholder="Email Address *" style={{borderRadius: 0, marginBottom: 25}} />
-                                        </div>                                      						
+                                            <input type="text" className="form-control" onChange={this.handleChange} name="email" id="register_email" placeholder="Email Address / Mobile number *" style={{borderRadius: 0, marginBottom: 25}} />
+                                        </div>   
+                                        <div className="form-group">
+                                            <input type="password" className="form-control" onChange={this.handleOTPChange} name="password" id="register_email" placeholder="Enter OTP *" style={{borderRadius: 0, marginBottom: 25}} />
+                                        </div>                                    						
                                         <div className="center" style={{marginTop: '10%'}}>
-                                            <button type="submit"  onClick={this.handleSubmit} value="LOGIN NOW" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '10%'}}>GENERATE OTP</button>		  
+                                            <button type="submit"  onClick={this.handleOTPSubmit} value="GENERATE OTP" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '10%'}}>GENERATE OTP</button>		  
+                                        </div>
+                                         <div className="center" style={{marginTop: '10%'}}>
+                                            <button type="submit"  onClick={this.handleSubmit} value="LOGIN NOW" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '10%'}}>LOGIN NOW</button>		  
                                         </div>
                                     </form>
                                 </div>
