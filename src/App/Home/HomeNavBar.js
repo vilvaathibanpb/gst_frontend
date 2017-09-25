@@ -10,8 +10,9 @@ import MenuItem  from 'react-bootstrap/lib/MenuItem';
 import NavbarToggle  from 'react-bootstrap/lib/NavbarToggle';
 import NavbarCollapse  from 'react-bootstrap/lib/NavbarCollapse';
 import NavbarBrand  from 'react-bootstrap/lib/NavbarBrand';
-import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
-// import { LinkContainer } from 'react-router-bootstrap';
+import {Link,Router} from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
+import { history } from '../../_helpers';
 
 //Components
 
@@ -30,8 +31,13 @@ export default class HomeNavBar extends React.Component {
 					<NavItem eventKey={1} href="#"><span className="nav-color">Home</span></NavItem>
 					<NavItem eventKey={2} href="#"><span className="nav-color">About GST</span></NavItem>
 					<NavItem eventKey={3} href="#"><span className="nav-color">Contact Us</span></NavItem>
-					<NavItem eventKey={4} href="#"><span className="nav-color">Login</span></NavItem>
+					<NavItem eventKey={4} href="#">
+					<Router history={history}>
+				<LinkContainer to="/login"><span className="nav-color">Login</span></LinkContainer>
+				</Router>
+				</NavItem>
 				</Nav>
+				
 			 </Navbar.Collapse> 
 		</Navbar>
     );

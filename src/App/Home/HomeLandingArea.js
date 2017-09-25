@@ -22,6 +22,7 @@ export default class HomeLandingArea extends React.Component {
 				<div className="col-sm-6" style={{marginTop: '20%'}}>
 					<h3 style={{fontSize: 16, color: '#fff', marginBottom: 1}}>Now register under GST</h3>
 					<h3 style={{fontSize: 20, color: '#fff', marginTop: 1, marginBottom: 30}}>HASSLE-FREE!</h3>			
+					{!localStorage.getItem('user') &&
 					<form>
 						<div className="form-group">
 							<input type="text" className="form-control" id="name" placeholder="Your Name *" style={{borderRadius: 0, marginBottom: 25}} />
@@ -42,6 +43,17 @@ export default class HomeLandingArea extends React.Component {
 							<button type="submit" value="REQUEST A CALL BACK" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>REQUEST A CALL BACK</button>		  
 						</div>
 					</form>
+					}
+					{localStorage.getItem('user') &&
+					<div>
+						<div className="center">
+							<button type="submit" value="PAY NOW" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>PAY NOW</button>		  
+						</div>
+						<div className="center">
+							<button type="submit" value="APPLY GST" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>APPLY GST</button>		  
+						</div>
+						</div>
+					}
 				</div>
 				<div className="col-sm-4" />		
 			</div>
