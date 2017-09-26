@@ -1,7 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { history } from '../../_helpers';
 
-export default class HomeLandingArea extends React.Component {
+
+class HomeLandingArea extends React.Component {
+	  constructor(props){
+		  super(props);
+			this.handleClick = this.handleClick.bind(this);
+	  }
+	handleClick(e){
+		e.preventDefault();
+		history.push("/home");
+	}
+	
   render() {
     return (
         <div className="col-sm-12 nav-bg" style={{padding: '0%', margin: '0%'}}>
@@ -50,7 +63,7 @@ export default class HomeLandingArea extends React.Component {
 							<button type="submit" value="PAY NOW" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>PAY NOW</button>		  
 						</div>
 						<div className="center">
-							<button type="submit" value="APPLY GST" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>APPLY GST</button>		  
+							<button type="submit" onClick={this.handleClick} value="APPLY GST" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>APPLY GST</button>
 						</div>
 						</div>
 					}
@@ -61,3 +74,13 @@ export default class HomeLandingArea extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+    const { alert } = state;
+    return {
+        alert
+    };
+}
+
+const connectedHomeLandingArea = connect(mapStateToProps)(HomeLandingArea);
+export { connectedHomeLandingArea as HomeLandingArea }; 
