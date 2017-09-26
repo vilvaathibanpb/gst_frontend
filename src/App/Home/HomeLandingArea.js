@@ -2,6 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 export default class HomeLandingArea extends React.Component {
+	constructor(){
+		super();
+		this.moveToPersonalDetails = this.moveToPersonalDetails.bind(this);
+	}
+	moveToPersonalDetails(){
+		
+	}
   render() {
     return (
         <div className="col-sm-12 nav-bg" style={{padding: '0%', margin: '0%'}}>
@@ -50,7 +57,7 @@ export default class HomeLandingArea extends React.Component {
 							<button type="submit" value="PAY NOW" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>PAY NOW</button>		  
 						</div>
 						<div className="center">
-							<button type="submit" value="APPLY GST" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}}>APPLY GST</button>		  
+							<button type="submit" value="APPLY GST" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '5%', marginBottom: '15%'}} onClick={this.moveToPersonalDetails}>APPLY GST</button>		  
 						</div>
 						</div>
 					}

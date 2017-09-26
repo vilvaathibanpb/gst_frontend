@@ -19,6 +19,8 @@ class LoginPage extends React.Component {
                 password: '',
                 type:'otp',
             },
+                error_email:'',
+                error_pwd:'',   
             submitted: false,
             otp_generated: false
         };
@@ -58,6 +60,9 @@ class LoginPage extends React.Component {
         this.setState({ otp_generated: true });
         const { user } = this.state;
         const { dispatch } = this.props;
+        if(!user.email){
+            this.setState({error_email:'Please enter your valid email'});
+        }
         if (user.email && user.mobile) {
             dispatch(userActions.generate_otp(user.email , user.mobile , user.type));
         }
@@ -69,6 +74,12 @@ class LoginPage extends React.Component {
         this.setState({ submitted: true });
         const { user } = this.state;
         const { dispatch } = this.props;
+        if(!user.email){
+            this.setState({error_email:'Please enter your valid email'});
+        }
+        if(!user.password){
+            this.setState({error_pwd:'Please enter the otp'})
+        }
         if (user.email && user.mobile && user.password) {
             dispatch(userActions.login(user.email , user.password));
         }
@@ -76,7 +87,9 @@ class LoginPage extends React.Component {
 
     render() {
         const { loggingIn } = this.props;
+        const { otp_success } = this.props;
         const { username, password, submitted } = this.state;
+        console.log("otp", otp_success);
         return (
             // <div className="col-md-6 col-md-offset-3">
             //     <h2>Login</h2>
@@ -131,17 +144,32 @@ class LoginPage extends React.Component {
                                     </div>
                                     <form style={{marginTop: '10%'}}>
                                         <div className="form-group">
-                                            <input type="text" className="form-control" onChange={this.handleChange} name="email" id="register_email" placeholder="Email Address / Mobile number *" style={{borderRadius: 0, marginBottom: 25}} />
-                                        </div>   
+                                            <input type="text"  className="form-control" onChange={this.handleChange} name="email" id="register_email" placeholder="Email Address / Mobile number *" style={{borderRadius: 0, marginBottom: 25}} />
+                                            {!this.state.user.email && 
+                                            <h4 className="errorField">{this.state.error_email}</h4>
+                                            }
+                                        </div> 
+                                        {otp_success &&
                                         <div className="form-group">
                                             <input type="password" className="form-control" onChange={this.handleOTPChange} name="password" id="register_email" placeholder="Enter OTP *" style={{borderRadius: 0, marginBottom: 25}} />
-                                        </div>                                    						
+                                            {!this.state.user.password &&
+                                            <h4 className="errorField" >{this.state.error_pwd}</h4>
+                                            }
+                                        </div>  
+                                        } 
+                                        {!otp_success &&                              						
                                         <div className="center" style={{marginTop: '10%'}}>
                                             <button type="submit"  onClick={this.handleOTPSubmit} value="GENERATE OTP" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '10%'}}>GENERATE OTP</button>		  
                                         </div>
+                                        }
+                                        {otp_success &&
+                                        <div>
+                                        <div type="submit" onClick={this.handleOTPSubmit} className="resend_otpButtonclass"><u>Resend OTP</u></div> 
                                          <div className="center" style={{marginTop: '10%'}}>
                                             <button type="submit"  onClick={this.handleSubmit} value="LOGIN NOW" align="center" style={{width: '100%', background: '#3c3c54', color: '#d5bd85', border: '1px solid #d5bd85', padding: 10, marginTop: '10%'}}>LOGIN NOW</button>		  
                                         </div>
+                                        </div>
+                                        }
                                     </form>
                                 </div>
                             </div>
@@ -155,8 +183,11 @@ class LoginPage extends React.Component {
 
 function mapStateToProps(state) {
     const { loggingIn } = state.authentication;
+    // console.log(state)
+    const { otp_success } = state.otp_generation;
     return {
-        loggingIn
+        loggingIn,
+        otp_success
     };
 }
 

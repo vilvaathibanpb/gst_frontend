@@ -14,6 +14,7 @@ class RegisterPage extends React.Component {
                 email: '',
                 mobile: '',
             },
+            email_format:false,
             submitted: false
         };
 
@@ -38,6 +39,11 @@ class RegisterPage extends React.Component {
         this.setState({ submitted: true });
         const { user } = this.state;
         const { dispatch } = this.props;
+        const atpos = user.email.indexOf("@");
+        const dotpos = user.email.lastIndexOf(".");
+        if(atpos<1 || dotpos<atpos+2 || dotpos+2>=user.email.length){
+            this.setState({email_format:true});
+        }
         if (user.name && user.email && user.mobile) {
             dispatch(userActions.register(user));
         }
@@ -114,19 +120,23 @@ class RegisterPage extends React.Component {
                             <div className="form-group">
                                 <input type="text" className="form-control" name="name" onChange={this.handleChange} id="register_name" placeholder="Your Name *" style={{borderRadius: 0, marginBottom: 25}} />
                                 {submitted && !user.name &&
-                                      <div className="help-block">Name is required</div>
+                                      <div className="errorField">Name is required</div>
                                 } 
                             </div>
                             <div className="form-group">
                                 <input type="text" className="form-control" name="email" onChange={this.handleChange} id="register_email" placeholder="Email Address *" style={{borderRadius: 0, marginBottom: 25}} />
                                 {submitted && !user.email &&
-                                      <div className="help-block">Name is required</div>
+                                      <div className="errorField">Email is Required</div>
                                 } 
+                                {
+                                    submitted && this.state.email_format && user.email &&
+                                    <div className="errorField">Valid email is Required</div>
+                                }
                             </div>
                             <div className="form-group">
-                                <input type="text" className="form-control" name="mobile" onChange={this.handleChange} id="register_mobile" placeholder="Phone Number *" style={{borderRadius: 0, marginBottom: 25}} />
-                                {submitted && !user.mobile &&
-                                      <div className="help-block">Name is required</div>
+                                <input type="number" className="form-control" name="mobile" maxLength="10" onChange={this.handleChange} id="register_mobile" placeholder="Phone Number *" style={{borderRadius: 0, marginBottom: 25}} />
+                                {submitted && (!user.mobile || user.mobile.length < 10) &&
+                                      <div className="errorField">Valid number is required</div>
                                 } 
                             </div>						
                             <div className="center" style={{marginTop: '10%'}}>
