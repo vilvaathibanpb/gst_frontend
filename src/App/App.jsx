@@ -9,10 +9,10 @@ import Footer from "./Home/Footer";
 import HomeContactUs from "./Home/HomeContactUs";
 import HomeDocReqd from "./Home/HomeDocReqd";
 import HomeGSTDesc from "./Home/HomeGSTDesc";
-import HomeLandingArea from "./Home/HomeLandingArea";
+import { HomeLandingArea } from "./Home/HomeLandingArea";
 import HomeNavBar from "./Home/HomeNavBar";
 import HomeTaxTypes from "./Home/HomeTaxTypes";
-// import { HomePage } from '../HomePage';
+import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
 
@@ -40,7 +40,7 @@ class App extends React.Component {
                 <Footer />
                 <Router history={history}>
                             <div>
-                                {/* <PrivateRoute exact path="/" component={HomePage} /> */}
+                                 <PrivateRoute exact path="/home" component={HomePage} /> 
                                 <Route path="/login" component={LoginPage} />
                                 <Route path="/register" component={RegisterPage} />
                             </div>
