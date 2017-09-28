@@ -48,6 +48,7 @@ class HomePage extends React.Component {
         this.selectedbranchNo = this.selectedbranchNo.bind(this);
         this.handleBranchAddressDetails = this.handleBranchAddressDetails.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
     toDocuments(event) {
@@ -82,7 +83,7 @@ class HomePage extends React.Component {
         console.log("personalDetails" + personal);
     }
     componentDidMount() {
-        this.props.dispatch(userActions.getAll());
+        // this.props.dispatch(userActions.getAll());
     }
 
     handleDeleteUser(id) {
@@ -151,6 +152,10 @@ class HomePage extends React.Component {
        }
 
        alert(this.state.addressName);
+    }
+
+    handleFileChange(file){
+        dispatch(userActions.fileupload(file));
     }
     render() {
         console.log(userItemResult['name']);
@@ -318,25 +323,27 @@ class HomePage extends React.Component {
                                     <TabPanel>
                                         <div className="col-sm-12" style={{ padding: 0 }}>
                                             <form style={{ width: '85%', marginTop: '5vh', marginLeft: 30 }}>
-                                                <div className="form-group">
-                                                    <input type="text" name={business.businessName} value={business.businessName} className="form-control data-form" id="business_name" placeholder="Business Name *" onChange={this.handleChange} />
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <select name={business.selectedState} value={business.selectedState} style={{ width: '75%' }} className="form-control  data-form" id="sel1" onChange={this.selectedState}>
+                                                        <option>Karnataka</option>
+                                                        <option>Andra</option>
+                                                        <option>Tamil Nadu</option>
+                                                        <option>Gujarat</option>
+                                                    </select>
+                                                    {submittedBusinessDetails && !business.pinCode &&
+                                                        <h4 className="errorField">Required</h4>
+                                                    }
+                                                    {/* <input type="text" style={{ width: '75%' }} name={business.businessName} value={business.businessName} className="form-control data-form" id="business_name" placeholder="Business Name *" onChange={this.handleChange} /> */}
+                                                    <label htmlFor="photo" className="custom-file-upload" style={{ width: '20%', fontSize: '22px' , marginLeft: '5%' }}><i className="fa fa-upload"></i></label>
+                                                    <input type="file" id="photo" />
                                                 </div>
                                                 {submittedBusinessDetails && !business.businessName &&
                                                     <h4 className="errorField">Required</h4>
                                                 }
                                                
 
-                                                <div className="form-group" style={{ display: 'flex' }}>
-                                                    <select name={business.selectedState} value={business.selectedState} style={{ width: '47%' }} className="form-control" id="sel1" onChange={this.selectedState}>
-                                                        <option>Karnataka</option>
-                                                        <option>Andra</option>
-                                                        <option>Tamil Nadu</option>
-                                                        <option>Gujarat</option>
-                                                    </select>
-                                                    <input name={business.pinCode} value={business.pinCode} type="text" style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" id="personal_pincode" placeholder="Pincode *" onChange={this.handleChange} />
-                                                    {submittedBusinessDetails && !business.pinCode &&
-                                                        <h4 className="errorField">Required</h4>
-                                                    }
+                                                <div className="form-group " style={{ display: 'flex' }}>
+                                                    
                                                 </div>
                                                
                                                 <button type="submit" onClick={this.toDocuments} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
