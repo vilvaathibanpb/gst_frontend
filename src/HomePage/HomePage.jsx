@@ -79,7 +79,6 @@ class HomePage extends React.Component {
             localStorage.setItem("personalDetails", personal);
             this.setState({ tabIndex: 1 });
         }
-        console.log("personalDetails" + personal);
     }
     componentDidMount() {
         this.props.dispatch(userActions.getAll());
@@ -89,6 +88,7 @@ class HomePage extends React.Component {
         return (e) => this.props.dispatch(userActions.delete(id));
     }
     handleChange(e) {
+        e.preventDefault();
         const { name, value } = e.target;
         const { personal, business } = this.state;
         this.setState({
@@ -129,7 +129,7 @@ class HomePage extends React.Component {
             }
         });
     }
-    handleDateChange(e){
+    handleDateChange(event){
         const { personal } = this.state;
         this.setState({
             personal: {
