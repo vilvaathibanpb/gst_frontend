@@ -94,19 +94,19 @@ class HomePage extends React.Component {
         this.setState({
             personal: {
                 ...personal,
-                name: value, mobile: value, email: value,aadhar: value
+                [name] : value
             },
-            business: {
-                ...business,
-                businessName: value,
-                tradeName: value,
-                businessAddress: value,
-                address: value,
-                locality: value,
-                street: value,
-                pinCode: value,
-                branchNo: value
-            }
+            // business: {
+            //     ...business,
+            //     businessName: value,
+            //     tradeName: value,
+            //     businessAddress: value,
+            //     address: value,
+            //     locality: value,
+            //     street: value,
+            //     pinCode: value,
+            //     branchNo: value
+            // }
         });
     }
     selectedState(event) {
@@ -212,19 +212,19 @@ class HomePage extends React.Component {
                                         <div className="col-sm-12" style={{ padding: 0 }}>
                                             <form style={{ width: '85%', marginTop: '5vh', marginLeft: 30 }}>
                                                 <div className="form-group">
-                                                    <input type="text" name={personal.name} value={personal.name} className="form-control data-form" id="personal_name" placeholder="Name *" onChange={this.handleChange} />
+                                                    <input type="text" name="name" value={personal.name} className="form-control data-form" id="personal_name" placeholder="Name *" onChange={this.handleChange} />
                                                 </div>
                                                 {submittedPersonalDetails && !personal.name &&
                                                     <h4 className="errorField">Name is Required</h4>
                                                 }
                                                 <div className="form-group">
-                                                    <input type="text" name={personal.mobile} value={personal.mobile} maxLength="10" className="form-control data-form" id="personal_mobile" placeholder="Mobile *" onChange={this.handleChange} />
+                                                    <input type="text" name="mobile" value={personal.mobile} maxLength="10" className="form-control data-form" id="personal_mobile" placeholder="Mobile *" onChange={this.handleChange} />
                                                 </div>
                                                 {submittedPersonalDetails && (!personal.mobile || personal.mobile.length < 10) &&
                                                     <h4 className="errorField">Valid Number is Required</h4>
                                                 }
                                                 <div className="form-group">
-                                                    <input type="email" name={personal.email} value={personal.email} className="form-control data-form" id="personal_email" placeholder="Email *" onChange={this.handleChange} />
+                                                    <input type="email" name="email" value={personal.email} className="form-control data-form" id="personal_email" placeholder="Email *" onChange={this.handleChange} />
                                                 </div>
                                                 {submittedPersonalDetails && !personal.email &&
                                                     <h4 className="errorField">email is Required</h4>
@@ -234,13 +234,13 @@ class HomePage extends React.Component {
                                                     <div className="errorField">Valid email is Required</div>
                                                 }
                                                 <div className="form-group">
-                                                    <input type="date" name={personal.dob} value={personal.dob} className="form-control data-form" id="personal_dob" placeholder="Date of birth*" onChange={this.handleDateChange} />
+                                                    <input type="date" name="dob" value={personal.dob} className="form-control data-form" id="personal_dob" placeholder="Date of birth*" onChange={this.handleDateChange} />
                                                 </div>
                                                 {submittedPersonalDetails && !personal.dob &&
                                                     <h4 className="errorField">Please select your date of birth </h4>
                                                 }
                                                 <div className="form-group">
-                                                    <input type="text" name={personal.dob} value={personal.aadhar} maxLength="12" className="form-control data-form" id="personal_aadhar" placeholder="Aadhar number *" onChange={this.handleChange} />
+                                                    <input type="text" name="aadhar" value={personal.aadhar} maxLength="12" className="form-control data-form" id="personal_aadhar" placeholder="Aadhar number *" onChange={this.handleChange} />
                                                 </div>
                                                 {submittedPersonalDetails && (!personal.aadhar || personal.aadhar < 12) &&
                                                     <h4 className="errorField">Aadhar is Required</h4>
@@ -315,7 +315,34 @@ class HomePage extends React.Component {
                                             </form>
                                         </div>
                                     </TabPanel>
-                                    <TabPanel>Athiban</TabPanel>
+                                    <TabPanel>
+                                        <div className="col-sm-12" style={{ padding: 0 }}>
+                                            <form style={{ width: '85%', marginTop: '5vh', marginLeft: 30 }}>
+                                                <div className="form-group">
+                                                    <input type="text" name={business.businessName} value={business.businessName} className="form-control data-form" id="business_name" placeholder="Business Name *" onChange={this.handleChange} />
+                                                </div>
+                                                {submittedBusinessDetails && !business.businessName &&
+                                                    <h4 className="errorField">Required</h4>
+                                                }
+                                               
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <select name={business.selectedState} value={business.selectedState} style={{ width: '47%' }} className="form-control" id="sel1" onChange={this.selectedState}>
+                                                        <option>Karnataka</option>
+                                                        <option>Andra</option>
+                                                        <option>Tamil Nadu</option>
+                                                        <option>Gujarat</option>
+                                                    </select>
+                                                    <input name={business.pinCode} value={business.pinCode} type="text" style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" id="personal_pincode" placeholder="Pincode *" onChange={this.handleChange} />
+                                                    {submittedBusinessDetails && !business.pinCode &&
+                                                        <h4 className="errorField">Required</h4>
+                                                    }
+                                                </div>
+                                               
+                                                <button type="submit" onClick={this.toDocuments} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
+                                            </form>
+                                        </div>
+                                    </TabPanel>
                                 </Tabs>
 
                             </div>
