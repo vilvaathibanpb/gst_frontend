@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import Dropzone from 'react-dropzone'
 import { userActions } from '../_actions';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-
 import DataIntro from "./Data Collection/DataIntro";
 import PersonalDetails from "./Data Collection/PersonalDetails";
 import BusinessDetails from "./Data Collection/BusinessDetails";
@@ -52,7 +51,6 @@ class HomePage extends React.Component {
         this.handle2Change = this.handle2Change.bind(this);
         this.selectedbranchNo = this.selectedbranchNo.bind(this);
         this.handleBranchAddressDetails = this.handleBranchAddressDetails.bind(this);
-        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
     toDocuments(event) {
@@ -100,9 +98,6 @@ class HomePage extends React.Component {
         // this.props.dispatch(userActions.getAll());
     }
 
-    handleDeleteUser(id) {
-        return (e) => this.props.dispatch(userActions.delete(id));
-    }
     handleChange(e) {
         e.preventDefault();
         const { name, value } = e.target;
@@ -151,9 +146,70 @@ class HomePage extends React.Component {
 
     }
 
-    handleFileChange(file){
-        dispatch(userActions.fileupload(file));
+    onDrop(files) {
+        // console.log(localStorage.getItem("user"));
+        const user = JSON.parse(localStorage.getItem("user")).result;
+        console.log(files);
+        const Base64 = { _keyStr: "HC6V61pIoCTf9YcFn77fTqc2s16GG8bvT8S4IUKQPayNEDcrUkwXet76EEfr9n+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+        const object_key = Base64.encode(files[0].name);
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode },
+            // body: JSON.stringify(user)
+        };
+
+        return fetch('http://gst.edocketapp.com/api/v0/upload/s3_url?user_id=' + user.id + '&object_key=' + object_key, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    return Promise.reject(response.statusText);
+                }
+
+                return response.json();
+            })
+            .then(user => {
+                // login successful if there's a jwt token in the response
+                // if (user && user.token) {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                if (user) {
+
+                    var postData = new FormData();
+                    postData.append('awsaccesskeyid',user.data.fields.awsaccesskeyid);
+                    postData.append('key',user.data.fields.key);
+                    postData.append('policy',user.data.fields.policy);
+                    postData.append('signature',user.data.fields.signature);
+                    postData.append('secure',user.data.fields.secure);
+                    postData.append('file',files[0]);
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'multipart/form-data' },
+                    };
+
+                    return fetch(user.data.scheme + '://' + user.data.url,postData, requestOptions).then(response => {
+                        if (!response.ok) {
+                            return Promise.reject(response.statusText);
+                        }
+
+                        return response.json();
+                    })
+                    .then(user => {
+                        if (user) {
+
+                            const requestOptions = {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'multipart/form-data' },
+                            };
+                        }
+                        return user;
+                    });
+                }
+
+                return user;
+            });
     }
+
+    // handleFileChange(files) {
+    //    store.dispatch(userActions.fileupload(file));
+    // }
     render() {
         const { user, users } = this.props;
         const { personal, business, submittedPersonalDetails, submittedBusinessDetails, checkBranchFields } = this.state;
@@ -174,7 +230,7 @@ class HomePage extends React.Component {
                     </div>
                     <div style={{ display: 'flex', marginTop: '1%' }}>
                         <input style={{ width: '47%' }} className="form-control data-form" name={"locality_" + number} type="text" placeholder="Locality *" onChange={_this.handleBranchAddressDetails} />
-                        <input  style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" name={"pinCode_" + number} type="text" placeholder="Pin code *" onChange={_this.handleBranchAddressDetails} />
+                        <input style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" name={"pinCode_" + number} type="text" placeholder="Pin code *" onChange={_this.handleBranchAddressDetails} />
                     </div>
                     <input style={{ marginTop: '1%' }} className="form-control data-form" name={"city_" + number} type="text" placeholder="City *" onChange={_this.handleBranchAddressDetails} />
 
@@ -196,16 +252,6 @@ class HomePage extends React.Component {
                         <div className="col-sm-12" style={{ padding: 0 }}>
                             <DataIntro />
                             <div className="col-sm-6" style={{ background: '#3c3c54', height: '100vh', padding: 0, marginTop: '13vh' }}>
-                                {/* <div className="col-sm-12" style={{color: 'rgba(255,255,255,0.4)', padding: 0}}>
-                                    <div className="col-sm-3" style={{color: '#fff', padding: 0, marginLeft: 30, textAlign: 'left!important'}}>PERSONAL DETAILS</div>
-                                    <div className="col-sm-4" style={{padding: 0, textAlign: 'center!important'}}>BUSINESS DETAILS</div>
-                                    <div className="col-sm-3" style={{padding: 0, textAlign: 'right!important'}}>DOCUMENT</div>						
-                                </div> */}
-                                {/* <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
-                                    <Tab eventKey={1} title="Tab 1"><PersonalDetails /></Tab>
-                                    <Tab eventKey={2} title="Tab 2"></Tab>
-                                    <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
-                                </Tabs> */}
                                 <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
                                     <TabList>
                                         <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, marginLeft: 30, textAlign: 'left!important' }}>PERSONAL DETAILS</div></Tab>
@@ -327,7 +373,7 @@ class HomePage extends React.Component {
                                             <form style={{ width: '85%', marginTop: '5vh', marginLeft: 30 }}>
 
                                                 <div className="form-group" style={{ display: 'flex' }}>
-                                                    <select name={business.selectedState} value={business.selectedState} style={{ width: '75%' }} className="form-control  data-form" id="sel1" onChange={this.selectedState}>
+                                                    <select style={{ width: '75%' }} className="form-control  data-form" id="sel1">
                                                         <option>Karnataka</option>
                                                         <option>Andra</option>
                                                         <option>Tamil Nadu</option>
@@ -337,16 +383,40 @@ class HomePage extends React.Component {
                                                         <h4 className="errorField">Required</h4>
                                                     }
                                                     {/* <input type="text" style={{ width: '75%' }} name={business.businessName} value={business.businessName} className="form-control data-form" id="business_name" placeholder="Business Name *" onChange={this.handleChange} /> */}
-                                                    <label htmlFor="photo" className="custom-file-upload" style={{ width: '20%', fontSize: '22px' , marginLeft: '5%' }}><i className="fa fa-upload"></i></label>
-                                                    <input type="file" id="photo" />
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                        {/* <input type="file" id="photo" /> */}
+                                                    </Dropzone>
                                                 </div>
                                                 {submittedBusinessDetails && !business.businessName &&
                                                     <h4 className="errorField">Required</h4>
                                                 }
-                                               
+
+                                                 <div className="form-group" style={{ display: 'flex' }}>
+                                                    <select style={{ width: '75%' }} className="form-control  data-form" id="sel1">
+                                                        <option>Karnataka</option>
+                                                        <option>Andra</option>
+                                                        <option>Tamil Nadu</option>
+                                                        <option>Gujarat</option>
+                                                    </select>
+                                                    {submittedBusinessDetails && !business.pinCode &&
+                                                        <h4 className="errorField">Required</h4>
+                                                    }
+                                                    {/* <input type="text" style={{ width: '75%' }} name={business.businessName} value={business.businessName} className="form-control data-form" id="business_name" placeholder="Business Name *" onChange={this.handleChange} /> */}
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                        {/* <input type="file" id="photo" /> */}
+                                                    </Dropzone>
+                                                </div>
+                                                {submittedBusinessDetails && !business.businessName &&
+                                                    <h4 className="errorField">Required</h4>
+                                                }
+
+
+
 
                                                 <div className="form-group " style={{ display: 'flex' }}>
-                                                    
+
                                                 </div>
 
                                                 <button type="submit" onClick={this.toDocuments} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
