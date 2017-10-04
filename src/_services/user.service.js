@@ -22,9 +22,9 @@ function login(username, password) {
     let login_url = "";
 
     if(username.toString().indexOf("@") >= 0){
-        login_url = 'http://gst.edocketapp.com/api/v0/user/signin/?email='+username+'&otp='+password+'&type=otp'
+        login_url = 'http://gst.edocketapp.com/api/v0/user/signin/?email='+username+'&otp='+password+'&type=login'
     }else{
-        login_url = 'http://gst.edocketapp.com/api/v0/user/signin/?mobile='+username+'&otp='+password+'&type=otp'
+        login_url = 'http://gst.edocketapp.com/api/v0/user/signin/?mobile='+username+'&otp='+password+'&type=login'
     }
 
     return fetch(login_url, requestOptions)
