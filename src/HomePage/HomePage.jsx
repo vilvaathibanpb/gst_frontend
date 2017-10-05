@@ -56,7 +56,7 @@ class HomePage extends React.Component {
 
     toDocuments(event) {
         event.preventDefault();
-        this.setState({ submittedBusinessDetails: true })
+        this.setState({ submittedBusinessDetails: true });
         console.log("data" + this.state.branchAddresses);
         const { business, branchAddresses } = this.state;
         if (business.businessName && business.tradeName && business.businessAddress &&
@@ -95,6 +95,7 @@ class HomePage extends React.Component {
             this.setState({ tabIndex: 1 });
         }
     }
+
     componentDidMount() {
         this.props.dispatch(userActions.getAll());
     }
@@ -169,7 +170,7 @@ class HomePage extends React.Component {
                     </div>
                     <div style={{ display: 'flex', marginTop: '1%' }}>
                         <input style={{ width: '47%' }} className="form-control data-form" name={"locality_" + number} type="text" placeholder="Locality *" onChange={_this.handleBranchAddressDetails} />
-                        <input  style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" name={"pinCode_" + number} type="text" placeholder="Pin code *" onChange={_this.handleBranchAddressDetails} />
+                        <input style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" name={"pinCode_" + number} type="text" placeholder="Pin code *" onChange={_this.handleBranchAddressDetails} />
                     </div>
                     <input style={{ marginTop: '1%' }} className="form-control data-form" name={"city_" + number} type="text" placeholder="City *" onChange={_this.handleBranchAddressDetails} />
 

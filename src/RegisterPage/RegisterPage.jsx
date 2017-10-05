@@ -17,7 +17,6 @@ class RegisterPage extends React.Component {
             email_format:false,
             submitted: false
         };
-
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
