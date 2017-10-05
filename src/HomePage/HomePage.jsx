@@ -22,25 +22,27 @@ class HomePage extends React.Component {
         super(props);
         const _this = this;
         const userItem = JSON.parse(localStorage.getItem('user'));
+        const personalDetailsItem = JSON.parse(localStorage.getItem('personalDetails'));
+        const businessDetailsItem = JSON.parse(localStorage.getItem('businessDetails'));
         var userItemResult = userItem['result'];
         this.state = {
             personal: {
-                name: userItemResult['name'] ? userItemResult['name'] : '',
-                mobile: userItemResult['mobile'],
-                email: userItemResult['email'],
-                dob: '',
-                aadhar: '',
+                name: personalDetailsItem['name'] ? personalDetailsItem['name'] : userItemResult['name'],
+                mobile: personalDetailsItem['mobile'] ? personalDetailsItem['mobile'] : userItemResult['mobile'],
+                email: personalDetailsItem['email'] ? personalDetailsItem['email'] : userItemResult['email'],
+                dob: personalDetailsItem['dob'] ? personalDetailsItem['dob'] : '',
+                aadhar: personalDetailsItem['aadhar'] ? personalDetailsItem['aadhar'] : '',
             },
             business: {
-                businessName: '',
-                tradeName: '',
-                businessAddress: '',
-                address: '',
-                locality: '',
-                street: '',
-                selectedState: 'Karnataka',
-                pinCode: '',
-                branchNo: 0
+                businessName: businessDetailsItem['businessName'] ? businessDetailsItem['businessName'] : '',
+                tradeName: businessDetailsItem['tradeName'] ? businessDetailsItem['tradeName'] : '',
+                businessAddress: businessDetailsItem['businessAddress'] ? businessDetailsItem['businessAddress'] : '',
+                address: businessDetailsItem['address'] ? businessDetailsItem['address'] : '',
+                locality: businessDetailsItem['locality'] ? businessDetailsItem['locality'] : '',
+                street: businessDetailsItem['street'] ? businessDetailsItem['street'] : '',
+                selectedState:businessDetailsItem['selectedState'] ? businessDetailsItem['selectedState'] : 'Karnataka',
+                pinCode: businessDetailsItem['pinCode'] ? businessDetailsItem['pinCode'] : '',
+                branchNo:  0
             },
             document: {
                 photo_success: false,
@@ -107,8 +109,8 @@ class HomePage extends React.Component {
 
     toDocuments(event) {
         event.preventDefault();
-        this.setState({ submittedBusinessDetails: true })
-        console.log(this.state.business);
+        this.setState({ submittedBusinessDetails: true });
+        console.log("data" + this.state.branchAddresses);
         const { business, branchAddresses } = this.state;
         const { name, value } = event.target;
         if (business.businessName && business.tradeName && business.businessAddress &&
@@ -157,6 +159,7 @@ class HomePage extends React.Component {
             this.setState({ tabIndex: 1 });
         }
     }
+
     componentDidMount() {
         // this.props.dispatch(userActions.getAll());
     }
