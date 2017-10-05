@@ -7,9 +7,10 @@ export const userActions = {
     login,
     logout,
     register,
-    getAll,
-    delete: _delete,
-    generate_otp
+    // getAll,
+    // delete: _delete,
+    generate_otp,
+    fileupload
 };
 
 function login(username, password) {
@@ -32,6 +33,28 @@ function login(username, password) {
     function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
     function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
     function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+}
+
+function fileupload(file) {
+    return dispatch => {
+        dispatch(request());
+
+        userService.fileupload(file)
+            .then(
+                response => { 
+                    dispatch(success(response));
+                    history.push('/');
+                },
+                response => {
+                    dispatch(failure(response));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request() { return { type: userConstants.FILE_REQUEST } }
+    function success(response) { return { type: userConstants.FILE_SUCCESS, response } }
+    function failure(response) { return { type: userConstants.FILE_FAILURE, response } }
 }
 
 function logout() {

@@ -1,28 +1,31 @@
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import Dropzone from 'react-dropzone'
 import { userActions } from '../_actions';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-
 import DataIntro from "./Data Collection/DataIntro";
 import PersonalDetails from "./Data Collection/PersonalDetails";
 import BusinessDetails from "./Data Collection/BusinessDetails";
 // import DataNavMenu from "./Data Collection/DataNavMenu";
 
-const userItem = JSON.parse(localStorage.getItem('user'));
-var userItemResult = userItem['result'];
-let address = [{},
-{}, {}, {}, {}];
+
+let address = [{}, {}];
+let validImageTypes = ['png', 'jpeg', 'jpg'];
+let validDocTypes = ['doc', 'docx', 'pdf'];
+let validTypes = ['pdf', 'png', 'jpeg', 'jpg'];
+let validRentTypes = ['pdf', 'png', 'jpeg', 'jpg', 'doc', 'docx'];
 
 class HomePage extends React.Component {
 
     constructor(props) {
         super(props);
         const _this = this;
+        const userItem = JSON.parse(localStorage.getItem('user'));
+        var userItemResult = userItem['result'];
         this.state = {
             personal: {
-                name: userItemResult['name'],
+                name: userItemResult['name'] ? userItemResult['name'] : '',
                 mobile: userItemResult['mobile'],
                 email: userItemResult['email'],
                 dob: '',
@@ -37,7 +40,52 @@ class HomePage extends React.Component {
                 street: '',
                 selectedState: 'Karnataka',
                 pinCode: '',
-                branchNo: ''
+                branchNo: 0
+            },
+            document: {
+                photo_success: false,
+                photo_error: false,
+                photo_errormsg: "",
+                photo_url: "",
+                pan_i_success: false,
+                pan_i_error: false,
+                pan_i_errormsg: "",
+                pan_i_url: "",
+                pan_b_success: false,
+                pan_b_error: false,
+                pan_b_errormsg: "",
+                pan_b_url: "",
+                rent_success: false,
+                rent_error: false,
+                rent_errormsg: "",
+                rent_url: "",
+                rent_type: "rent_agreement",
+                address_success: false,
+                address_error: false,
+                address_errormsg: "",
+                address_url: "",
+                address_type: "aadhar",
+                bank_success: false,
+                bank_error: false,
+                bank_errormsg: "",
+                bank_url: "",
+                bank_type: "cancelled_cheque",
+                optional_success: false,
+                optional_error: false,
+                optional_errormsg: "",
+                optional_url: "",
+                optional_type: "Optional",
+                branch1_success: false,
+                branch1_error: false,
+                branch1_errormsg: "",
+                branch1_url: "",
+                branch1_type: "rent_agreement",
+                branch2_success: false,
+                branch2_error: false,
+                branch2_errormsg: "",
+                branch2_url: "",
+                branch2_type: "rent_agreement",
+
             },
             branchAddresses: [],
             tabIndex: 0,
@@ -50,8 +98,10 @@ class HomePage extends React.Component {
         this.toDocuments = this.toDocuments.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handle2Change = this.handle2Change.bind(this);
+        this.handleDocChange = this.handleDocChange.bind(this);
         this.selectedbranchNo = this.selectedbranchNo.bind(this);
         this.handleBranchAddressDetails = this.handleBranchAddressDetails.bind(this);
+        this.onPhotoDrop = this.onPhotoDrop.bind(this);
     }
 
     toDocuments(event) {
@@ -59,22 +109,31 @@ class HomePage extends React.Component {
         this.setState({ submittedBusinessDetails: true });
         console.log("data" + this.state.branchAddresses);
         const { business, branchAddresses } = this.state;
+        const { name, value } = event.target;
         if (business.businessName && business.tradeName && business.businessAddress &&
-            business.address && business.locality && business.street &&
-            business.selectedState && business.pinCode && business.branchNo) {
+            business.address && business.locality && business.street && business.pinCode) {
+            console.log(business.branchNo);
             if (business.branchNo > 0) {
+                console.log("1");
                 for (var i = 0; i < business.branchNo; i++) {
-                    let number = name.substring(name.length - 1)
+                    console.log("2", address);
+
+                    let number = i+1;
+                    console.log(number);
                     if (address[i].hasOwnProperty("address1_" + number) && address[i].hasOwnProperty("address2_" + number) &&
                         address[i].hasOwnProperty("locality_" + number) && address[i].hasOwnProperty("city_" + number) && address[i].hasOwnProperty("pinCode_" + number)) {
                         this.setState({ checkBranchFields: true });
+                         this.setState({ branchAddresses: address });
+                        this.setState({ tabIndex: 2 });
+                        localStorage.setItem("branchadressCount", branchAddresses);
+                        localStorage.setItem("businessDetails", business);
                     }
                 }
-                this.setState({ branchAddresses: address });
-                localStorage.setItem("branchadressCount", branchAddresses);
+               
             }
             else {
                 localStorage.setItem("businessDetails", business);
+                console.log("saving");
                 this.setState({ tabIndex: 2 });
             }
         }
@@ -97,12 +156,9 @@ class HomePage extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(userActions.getAll());
+        // this.props.dispatch(userActions.getAll());
     }
 
-    handleDeleteUser(id) {
-        return (e) => this.props.dispatch(userActions.delete(id));
-    }
     handleChange(e) {
         e.preventDefault();
         const { name, value } = e.target;
@@ -121,6 +177,19 @@ class HomePage extends React.Component {
         this.setState({
             business: {
                 ...business,
+                [name]: value
+            }
+        });
+
+    }
+
+    handleDocChange(event) {
+        event.preventDefault();
+        const { name, value } = event.target;
+        const { document } = this.state;
+        this.setState({
+            document: {
+                ...document,
                 [name]: value
             }
         });
@@ -150,13 +219,422 @@ class HomePage extends React.Component {
         console.log(address);
 
     }
+
+    onPhotoDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validImageTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        photo_success: false,
+                        photo_error: true,
+                        photo_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "photo");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    photo_success: false,
+                    photo_error: true,
+                    photo_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onPANIDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        pan_i_success: false,
+                        pan_i_error: true,
+                        pan_i_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "pan_i");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    pan_i_success: false,
+                    pan_i_error: true,
+                    pan_i_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onPANBDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        pan_b_error: true,
+                        pan_b_success: false,
+                        pan_b_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "pan_b");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    pan_b_success: false,
+                    pan_b_error: true,
+                    pan_b_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onAddressDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        address_error: true,
+                        address_success: false,
+                        address_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "address");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    address_success: false,
+                    address_error: true,
+                    address_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onBankDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        bank_error: true,
+                        bank_success: false,
+                        bank_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "bank");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    bank_success: false,
+                    bank_error: true,
+                    bank_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onRentDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validRentTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        rent_error: true,
+                        rent_success: false,
+                        rent_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "rent");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    rent_success: false,
+                    rent_error: true,
+                    rent_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onBranch1Drop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validRentTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        branch1_error: true,
+                        branch1_success: false,
+                        branch1_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "branch1");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    branch1_success: false,
+                    branch1_error: true,
+                    branch1_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onBranch2Drop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validRentTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        branch2_error: true,
+                        branch2_success: false,
+                        branch2_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "branch2");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    branch2_success: false,
+                    branch2_error: true,
+                    branch2_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+    onOptionalDrop(files) {
+
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
+        const { document } = this.state;
+
+        if (validRentTypes.indexOf(file_ext) != -1) {
+            if (files[0].size > 5242880) {
+                this.setState({
+                    document: {
+                        ...document,
+                        optional_error: true,
+                        optional_success: false,
+                        optional_errormsg: "File size shouldn't exceed 5 MB"
+                    }
+                });
+            } else {
+                this.onDrop(files, "optional");
+            }
+        } else {
+            // this.state.document.photo_error = true;
+            // this.state.document.photo_errormsg = "Invalid File type";
+            this.setState({
+                document: {
+                    ...document,
+                    optional_success: false,
+                    optional_error: true,
+                    optional_errormsg: "Invalid File Type"
+                }
+            });
+        }
+        console.log(this.state);
+    }
+
+
+    onDrop(files, type) {
+        const user = JSON.parse(localStorage.getItem("user")).result;
+        const { document } = this.state;
+        console.log(files);
+        const Base64 = { _keyStr: "HC6V61pIoCTf9YcFn77fTqc2s16GG8bvT8S4IUKQPayNEDcrUkwXet76EEfr9n+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+        const object_key = Base64.encode(files[0].name);
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode },
+        };
+
+        return fetch('http://gst.edocketapp.com/api/v0/upload/s3_url?user_id=' + user.id + '&object_key=' + object_key, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+
+                    this.setState({
+                        document: {
+                            ...document,
+                            [type + "_error"]: true,
+                            [type + "_success"]: false,
+                            [type + "_errormsg"]: "Error in uploading. Please try after sometime"
+                        }
+                    });
+                    return Promise.reject(response.statusText);
+                }
+
+                return response.json();
+            })
+            .then(user => {
+
+                if (user) {
+
+                    var postData = new FormData();
+                    postData.append('awsaccesskeyid', user.data.fields.awsaccesskeyid);
+                    postData.append('key', user.data.fields.key);
+                    postData.append('policy', user.data.fields.policy);
+                    postData.append('signature', user.data.fields.signature);
+                    postData.append('secure', user.data.fields.secure);
+                    postData.append('file', files[0]);
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'multipart/form-data' },
+                    };
+
+                    return fetch(user.data.scheme + '://' + user.data.url, postData, requestOptions).then(response => {
+                        if (!response.ok) {
+                            this.setState({
+                                document: {
+                                    ...document,
+                                    [type + "_error"]: true,
+                                    [type + "_success"]: false,
+                                    [type + "_errormsg"]: "Error in uploading. Please try after sometime"
+                                }
+                            });
+                            return Promise.reject(response.statusText);
+                        }
+
+                        this.setState({
+                            document: {
+                                ...document,
+                                [type + "_success"]: true,
+                                [type + "_error"]: false,
+                                [type + "_url"]: user.data.scheme + '://' + user.data.url + '/' + object_key
+                            }
+                        });
+                        console.log(this.state)
+                        return response.json();
+                    })
+                }
+
+                return user;
+            });
+    }
+
+
     render() {
+        const { document } = this.state;
         const { user, users } = this.props;
         const { personal, business, submittedPersonalDetails, submittedBusinessDetails, checkBranchFields } = this.state;
         let noOfBranches = [], i;
+        let tabIndex = this.state.tabIndex;
         for (i = 1; i <= business.branchNo; i++) {
             noOfBranches.push(i);
         }
+
+        //  
+        // function redirect(t , _this){
+        //     console.log(t);
+        //     let tabIndex = _this.state.tabIndex;
+        //     _this.setState({ tabIndex : t })
+
+        //     if( t == 2){
+        //         console.log("1");
+        //         if(!localStorage.getItem("businessDetails")){
+        //             _this.setState({ tabIndex : 1 })
+        //         }
+        //         if(!localStorage.getItem("personalDetails")){
+        //             _this.setState({ tabIndex : 0 })
+        //         }
+        //     }
+
+        //     if( t == 1){
+        //         console.log("0");
+        //         if(!localStorage.getItem("personalDetails")){
+        //             _this.setState({ tabIndex : 0 })
+        //         }
+        //     }
+        // }
 
         function BranchList(props) {
             const _this = props.this;
@@ -183,7 +661,7 @@ class HomePage extends React.Component {
         }
         return (
             <section style={{ background: 'linear-gradient(90deg, #d5bd85 50%, #3c3c54 50%)', position: "fixed", width: "100%", height: "100%", top: 0, left: 0, overflowY: "scroll" }}>
-                <div style={{ position: 'fixed', top: 0, left: '50%', zIndex: 99999, background: '#fff', height: '8vh', width: '50%', display: 'flex' }}>
+                <div style={{ position: 'fixed', top: 0, left: '49%', zIndex: 99999, background: '#fff', height: '8vh', width: '50%', display: 'flex' }}>
                     <h2 style={{ textAlign: 'left!important', fontSize: 16, fontWeight: 600, marginLeft: 30, marginBottom: 20 }}>DATA COLLECTION</h2>
                     <Link to="/"><div onClick={this.handleClick} style={{ zIndex: '999999', fontSize: '24px', paddingTop: '6px', background: '#000', marginLeft: '22vw', width: 50, height: '8vh', color: '#fff' }}>X</div></Link>
                 </div>
@@ -191,22 +669,12 @@ class HomePage extends React.Component {
                     <div className="row">
                         <div className="col-sm-12" style={{ padding: 0 }}>
                             <DataIntro />
-                            <div className="col-sm-6" style={{ background: '#3c3c54', height: '100vh', padding: 0, marginTop: '13vh' }}>
-                                {/* <div className="col-sm-12" style={{color: 'rgba(255,255,255,0.4)', padding: 0}}>
-                                    <div className="col-sm-3" style={{color: '#fff', padding: 0, marginLeft: 30, textAlign: 'left!important'}}>PERSONAL DETAILS</div>
-                                    <div className="col-sm-4" style={{padding: 0, textAlign: 'center!important'}}>BUSINESS DETAILS</div>
-                                    <div className="col-sm-3" style={{padding: 0, textAlign: 'right!important'}}>DOCUMENT</div>						
-                                </div> */}
-                                {/* <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
-                                    <Tab eventKey={1} title="Tab 1"><PersonalDetails /></Tab>
-                                    <Tab eventKey={2} title="Tab 2"></Tab>
-                                    <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
-                                </Tabs> */}
+                            <div className="col-sm-6" style={{ background: '#3c3c54', height: '100vh', padding: 0, marginTop: '8vh' }}>
                                 <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
                                     <TabList>
                                         <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, marginLeft: 30, textAlign: 'left!important' }}>PERSONAL DETAILS</div></Tab>
-                                        <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, textAlign: 'center!important' }}>BUSINESS DETAILS</div></Tab>
-                                        <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, textAlign: 'right!important' }}>DOCUMENTS</div></Tab>
+                                        {localStorage.getItem("personalDetails") && <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, textAlign: 'center!important' }}>BUSINESS DETAILS</div></Tab>}
+                                        {localStorage.getItem("businessDetails") && localStorage.getItem("personalDetails") && <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, textAlign: 'right!important' }}>DOCUMENTS</div></Tab>}
                                     </TabList>
                                     <TabPanel>
                                         <div className="col-sm-12" style={{ padding: 0 }}>
@@ -305,9 +773,9 @@ class HomePage extends React.Component {
                                                         <option value>0</option>
                                                         <option>1</option>
                                                         <option>2</option>
-                                                        <option>3</option>
+                                                        {/* <option>3</option>
                                                         <option>4</option>
-                                                        <option>5</option>
+                                                        <option>5</option> */}
                                                     </select>
                                                 </div>
                                                 <BranchList numbers={noOfBranches} this={this} />
@@ -321,26 +789,158 @@ class HomePage extends React.Component {
                                     <TabPanel>
                                         <div className="col-sm-12" style={{ padding: 0 }}>
                                             <form style={{ width: '85%', marginTop: '5vh', marginLeft: 30 }}>
-                                                <div className="form-group">
-                                                    <input type="text" name="businessName" value={business.businessName} className="form-control data-form" id="business_name" placeholder="Business Name *" onChange={this.handleChange} />
-                                                </div>
-                                                {submittedBusinessDetails && !business.businessName &&
-                                                    <h4 className="errorField">Required</h4>
-                                                }
-
 
                                                 <div className="form-group" style={{ display: 'flex' }}>
-                                                    <select name="selectedState" value={business.selectedState} style={{ width: '47%' }} className="form-control" id="sel1" onChange={this.selectedState}>
-                                                        <option>Karnataka</option>
-                                                        <option>Andra</option>
-                                                        <option>Tamil Nadu</option>
-                                                        <option>Gujarat</option>
-                                                    </select>
-                                                    <input name="pinCode" value={business.pinCode} type="text" style={{ width: '47%', marginLeft: '6%' }} className="form-control data-form" id="personal_pincode" placeholder="Pincode *" onChange={this.handleChange} />
-                                                    {submittedBusinessDetails && !business.pinCode &&
-                                                        <h4 className="errorField">Required</h4>
-                                                    }
+                                                    <label htmlFor="photo" className="custom-file-upload1" style={{ fontSize: '14px', width: '75%' }}>Photograph *</label>
+
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onPhotoDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
                                                 </div>
+                                                {this.state.document.photo_error &&
+                                                    <h4 className="errorField">{this.state.document.photo_errormsg}</h4>
+                                                }
+                                                {this.state.document.photo_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <label htmlFor="photo" className="custom-file-upload1" style={{ fontSize: '14px', width: '75%' }}>PAN Individual *</label>
+
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onPANIDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
+                                                </div>
+                                                {this.state.document.pan_i_error &&
+                                                    <h4 className="errorField">{this.state.document.pan_i_errormsg}</h4>
+                                                }
+                                                {this.state.document.pan_i_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <label htmlFor="photo" className="custom-file-upload1" style={{ fontSize: '14px', width: '75%' }}>PAN Business (Optional)</label>
+
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onPANBDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
+                                                </div>
+                                                {this.state.document.pan_b_error &&
+                                                    <h4 className="errorField">{this.state.document.pan_b_errormsg}</h4>
+                                                }
+                                                {this.state.document.pan_b_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <select style={{ width: '75%' }} value={this.state.document.rent_type} name="rent_type" className="form-control  data-form" id="rent" onChange={this.handleDocChange}>
+                                                        <option value="rent_agreement">Rent / Lease Agreement</option>
+                                                        <option value="tax_receipt">Tax Receipt</option>
+                                                        <option value="khata_copy">Municipal Khata Copy</option>
+                                                    </select>
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onRentDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
+                                                </div>
+                                                {this.state.document.rent_error &&
+                                                    <h4 className="errorField">{this.state.document.rent_errormsg}</h4>
+                                                }
+                                                {this.state.document.rent_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <select style={{ width: '75%' }} value={this.state.document.address_type} name="address_type" className="form-control  data-form" id="address" onChange={this.handleDocChange}>
+                                                        <option value="aadhar">Aadhar Card</option>
+                                                        <option value="voter_id">Voter ID</option>
+                                                        <option value="ration_card">Ration Card</option>
+                                                        <option value="passport">Passport</option>
+                                                    </select>
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onAddressDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
+                                                </div>
+                                                {this.state.document.address_error &&
+                                                    <h4 className="errorField">{this.state.document.address_errormsg}</h4>
+                                                }
+                                                {this.state.document.address_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <select style={{ width: '75%' }} value={this.state.document.bank_type} name="bank_type" className="form-control  data-form" id="bank" onChange={this.handleDocChange}>
+                                                        <option value="cancelled_cheque">Cancelled Cheque</option>
+                                                        <option value="bank_statement">Bank statement</option>
+                                                        <option value="passbook">First page of passbook</option>
+                                                    </select>
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onBankDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
+                                                </div>
+                                                {this.state.document.bank_error &&
+                                                    <h4 className="errorField">{this.state.document.bank_errormsg}</h4>
+                                                }
+                                                {this.state.document.bank_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                    <input type="text" className="form-control  data-form" value={this.state.document.optional_type} name="optional_type" id="optional" placeholder="Optional Document" style={{ borderRadius: 0, width: '75%' }} onChange={this.handleDocChange} />
+                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onOptionalDrop.bind(this)}>
+                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                    </Dropzone>
+                                                </div>
+                                                {this.state.document.optional_error &&
+                                                    <h4 className="errorField">{this.state.document.optional_errormsg}</h4>
+                                                }
+                                                {this.state.document.optional_success &&
+                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                }
+
+                                                {business.branchNo > 0 &&
+                                                    <div>
+                                                        <div className="textContainer">Branch 1</div>
+                                                        <div className="form-group" style={{ display: 'flex' }}>
+                                                            <select style={{ width: '75%' }} value={this.state.document.branch1_type} name="branch1_type" className="form-control  data-form" id="rent" onChange={this.handleDocChange}>
+                                                                <option value="rent_agreement">Rent / Lease Agreement</option>
+                                                                <option value="tax_receipt">Tax Receipt</option>
+                                                                <option value="khata_copy">Municipal Khata Copy</option>
+                                                            </select>
+                                                            <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onBranch1Drop.bind(this)}>
+                                                                <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                            </Dropzone>
+                                                        </div>
+                                                        {this.state.document.branch1_error &&
+                                                            <h4 className="errorField">{this.state.document.branch1_errormsg}</h4>
+                                                        }
+                                                        {this.state.document.branch1_success &&
+                                                            <h4 className="successField" >Uploaded successfully</h4>
+                                                        }
+
+                                                        {business.branchNo > 1 &&
+                                                            <div>
+                                                                <div className="textContainer">Branch 2</div>
+                                                                <div className="form-group" style={{ display: 'flex' }}>
+                                                                    <select style={{ width: '75%' }} value={this.state.document.branch2_type} name="branch2_type" className="form-control  data-form" id="rent" onChange={this.handleDocChange}>
+                                                                        <option value="rent_agreement">Rent / Lease Agreement</option>
+                                                                        <option value="tax_receipt">Tax Receipt</option>
+                                                                        <option value="khata_copy">Municipal Khata Copy</option>
+                                                                    </select>
+                                                                    <Dropzone style={{ border: 'none!important', width: '20%', marginLeft: '5%' }} onDrop={this.onBranch2Drop.bind(this)}>
+                                                                        <label htmlFor="photo" className="custom-file-upload" style={{ fontSize: '22px', width: '100%' }}><i className="fa fa-upload"></i></label>
+                                                                    </Dropzone>
+                                                                </div>
+                                                                {this.state.document.branch2_error &&
+                                                                    <h4 className="errorField">{this.state.document.branch2_errormsg}</h4>
+                                                                }
+                                                                {this.state.document.branch2_success &&
+                                                                    <h4 className="successField" >Uploaded successfully</h4>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                }
+
 
                                                 <button type="submit" onClick={this.toDocuments} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
                                             </form>
