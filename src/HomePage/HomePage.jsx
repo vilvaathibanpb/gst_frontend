@@ -87,7 +87,7 @@ class HomePage extends React.Component {
                 branch2_type: "rent_agreement",
 
             },
-            branchAddresses: [],
+            branchAddresses: ["vilva"],
             tabIndex: 0,
             checkBranchFields: false,
             emailFormat: false,
@@ -102,6 +102,7 @@ class HomePage extends React.Component {
         this.selectedbranchNo = this.selectedbranchNo.bind(this);
         this.handleBranchAddressDetails = this.handleBranchAddressDetails.bind(this);
         this.onPhotoDrop = this.onPhotoDrop.bind(this);
+        this.apiCall = this.apiCall.bind(this);
     }
 
     toDocuments(event) {
@@ -123,9 +124,11 @@ class HomePage extends React.Component {
                     if (address[i].hasOwnProperty("address1_" + number) && address[i].hasOwnProperty("address2_" + number) &&
                         address[i].hasOwnProperty("locality_" + number) && address[i].hasOwnProperty("city_" + number) && address[i].hasOwnProperty("pinCode_" + number)) {
                         this.setState({ checkBranchFields: true });
-                         this.setState({ branchAddresses: address });
+                        // this.setState({ branchAddresses: ["chaithra"] });
+                        this.state.branchAddresses = address;
                         this.setState({ tabIndex: 2 });
-                        localStorage.setItem("branchadressCount", branchAddresses);
+                        console.log(this.state , "vilva", address);
+                        localStorage.setItem("branchadressCount", this.state.branchAddresses);
                         localStorage.setItem("businessDetails", business);
                     }
                 }
@@ -600,6 +603,239 @@ class HomePage extends React.Component {
             });
     }
 
+    apiCall(event){
+        event.preventDefault();
+        const { document , business , personal } = this.state;
+        let addressArray = [];
+        if(!document.photo_success){
+            this.setState({
+                    document: {
+                        ...document,
+                        photo_error: true,
+                        photo_errormsg: "PhotoGraph is mandatory"
+                    }
+                });
+                return;
+        }
+        else if(!document.pan_i_success){
+            this.setState({
+                    document: {
+                        ...document,
+                        pan_i_error: true,
+                        pan_i_errormsg: "Pan Card (Individual) is mandatory"
+                    }
+                });
+                return;
+        }
+        else if(!document.rent_success){
+            this.setState({
+                    document: {
+                        ...document,
+                        rent_error: true,
+                        rent_errormsg: "This document is mandatory"
+                    }
+                });
+                return;
+        }
+        else if(!document.address_success){
+            this.setState({
+                    document: {
+                        ...document,
+                        address_error: true,
+                        address_errormsg: "Address proof is mandatory"
+                    }
+                });
+                return;
+        }
+        else if(!document.bank_success){
+            this.setState({
+                    document: {
+                        ...document,
+                        bank_error: true,
+                        bank_errormsg: "Bank Details are mandatory"
+                    }
+                });
+                return;
+        }
+
+        const regAddress =  {
+                            "address_type" : "Reg",
+                            "address1" : business.businessAddress,
+                            "address2" : business.address,
+                            "locality" : business.locality,
+                            "city" : business.street,
+                            "state" : business.selectedState,
+                            "pincode" : business.pinCode,
+                            "document_name" : document.rent_type,
+                            "document_url" : document.rent_url
+        }
+
+        if(business.branchNo == 1){
+
+             addressArray = [
+                                regAddress,	
+                                {
+                                    "address_type" : "Branch",
+                                    "address1" : this.state.branchAddresses[0].address1_1,
+                                    "address2" : this.state.branchAddresses[0].address2_1,
+                                    "locality" : this.state.branchAddresses[0].locality_1,
+                                    "city" : this.state.branchAddresses[0].city_1,
+                                    "state" : business.selectedState,
+                                    "pincode" : this.state.branchAddresses[0].pinCode_1,
+                                    "document_name" : document.branch1_type,
+                                    "document_url" : document.branch1_url
+                                }	
+                            ]
+
+            if(!document.branch1_success){
+                   this.setState({
+                    document: {
+                        ...document,
+                        branch1_error: true,
+                        branch1_errormsg: "Branch 1 Details are mandatory"
+                    }
+                });
+                return; 
+            }
+        }
+
+        if(business.branchNo == 0){
+             addressArray = [ regAddress ];
+        }
+      
+
+        if(business.branchNo == 2){
+
+              addressArray = [
+                                regAddress,	
+                                {
+                                    "address_type" : "Branch",
+                                    "address1" : this.state.branchAddresses[0].address1_1,
+                                    "address2" : this.state.branchAddresses[0].address2_1,
+                                    "locality" : this.state.branchAddresses[0].locality_1,
+                                    "city" : this.state.branchAddresses[0].city_1,
+                                    "state" : business.selectedState,
+                                    "pincode" : this.state.branchAddresses[0].pinCode_1,
+                                    "document_name" : document.branch1_type,
+                                    "document_url" : document.branch1_url
+                                },	
+                                {
+                                    "address_type" : "Branch",
+                                    "address1" : this.state.branchAddresses[0].address1_2,
+                                    "address2" : this.state.branchAddresses[0].address2_2,
+                                    "locality" : this.state.branchAddresses[0].locality_2,
+                                    "city" : this.state.branchAddresses[0].city_2,
+                                    "state" : business.selectedState,
+                                    "pincode" : this.state.branchAddresses[0].pinCode_2,
+                                    "document_name" : document.branch2_type,
+                                    "document_url" : document.branch2_url
+                                }	
+                            ]
+
+            if(!document.branch1_success){
+                   this.setState({
+                    document: {
+                        ...document,
+                        branch1_error: true,
+                        branch1_errormsg: "Branch 1 Details are mandatory"
+                    }
+                });
+                return; 
+            }
+
+            if(!document.branch2_success){
+                   this.setState({
+                    document: {
+                        ...document,
+                        branch2_error: true,
+                        branch2_errormsg: "Branch 2 Details are mandatory"
+                    }
+                });
+                return; 
+            }
+        }
+
+       
+                            
+        let docArray = [          
+            {
+                "document_name" : "photograph",
+                "document_url" : document.photo_url
+            },
+            {
+                "document_name" : "pancard_individual",
+                "document_url" : document.pan_i_url
+            },
+            {
+                "document_name" : document.rent_type,
+                "document_url" : document.rent_url
+            },
+            {
+                "document_name" : document.address_type,
+                "document_url" : document.address_url
+            },
+            {
+                "document_name" : document.bank_type,
+                "document_url" : document.bank_url
+            }
+        ]
+
+        if(document.pan_b_success){
+            docArray.push({
+                "document_name" : "pancard_business",
+                "document_url" : document.pan_b_url
+            })
+        }
+
+        if(document.optional_success){
+            docArray.push({
+                "document_name" : document.optional_type,
+                "document_url" : document.optional_url
+            })
+        }
+
+        const user = JSON.parse(localStorage.getItem("user")).result;
+        const collectedData = {
+                        "user_id" : user.id,
+                        "name" : personal.name,
+                        "email" : personal.email,
+                        "mobile" : personal.mobile,
+                        "birthdate" : personal.dob,
+                        "aadhar_no" : personal.aadhar,                        
+                        "business_type" : "new",
+                        "business_category" : "old",
+                        "business_name" : business.businessName,
+                        // "date_of_incorporation" : "02/02/1992",
+                        "trade_name" : business.tradeName,
+                        "address": addressArray,
+                        "document" : docArray
+                    }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode },
+            body: JSON.stringify(collectedData)
+        };
+        console.log(collectedData);
+        return fetch("http://gst.edocketapp.com/api/v0/business", requestOptions)
+            .then(response => {
+                if (!response.ok) { 
+                    return Promise.reject(response.statusText);
+                }
+
+                return response.json();
+            })
+            .then(user => {
+                // login successful if there's a jwt token in the response
+                // if (user && user.token) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    if (user) {
+                   console.log(user);
+                }
+
+                return user;
+            });
+
+    }
 
     render() {
         const { document } = this.state;
@@ -732,13 +968,13 @@ class HomePage extends React.Component {
                                                     <h4 className="errorField">Required</h4>
                                                 }
                                                 <div className="form-group">
-                                                    <input type="text" name="businessAddress" value={business.businessAddress} className="form-control data-form" id="business_address1" placeholder="Business Address *" onChange={this.handle2Change} />
+                                                    <input type="text" name="businessAddress" value={business.businessAddress} className="form-control data-form" id="business_address1" placeholder="Address Line 1 *" onChange={this.handle2Change} />
                                                 </div>
                                                 {submittedBusinessDetails && !business.businessAddress &&
                                                     <h4 className="errorField">Required</h4>
                                                 }
                                                 <div className="form-group">
-                                                    <input type="text" name="address" value={business.address} className="form-control data-form" id="business_address2" placeholder="Address *" onChange={this.handle2Change} />
+                                                    <input type="text" name="address" value={business.address} className="form-control data-form" id="business_address2" placeholder="Address Line 2 *" onChange={this.handle2Change} />
                                                 </div>
                                                 {submittedBusinessDetails && !business.address &&
                                                     <h4 className="errorField">Required</h4>
@@ -755,7 +991,7 @@ class HomePage extends React.Component {
                                                 </div>
 
                                                 <div className="form-group" style={{ display: 'flex' }}>
-                                                    <select name="selectedState" value={business.selectedState} style={{ width: '47%' }} className="form-control" id="sel1" onChange={this.handle2Change}>
+                                                    <select name="selectedState" value={business.selectedState} style={{ width: '47%' }} className="form-control   data-form" id="sel1" onChange={this.handle2Change}>
                                                         <option>Karnataka</option>
                                                         <option>Andra</option>
                                                         <option>Tamil Nadu</option>
@@ -768,7 +1004,7 @@ class HomePage extends React.Component {
                                                 </div>
                                                 <div className="form-group" style={{ display: 'flex' }}>
                                                     <label style={{ color: 'white', width: '47%' }} htmlFor="sel2">No of Branch office in {business.selectedState}</label>
-                                                    <select name="branchNo" value={business.branchNo} style={{ width: '47%', marginLeft: '6%' }} className="form-control" id="sel2" onChange={this.handle2Change}>
+                                                    <select name="branchNo" value={business.branchNo} style={{ width: '47%', marginLeft: '6%' }} className="form-control   data-form" id="sel2" onChange={this.handle2Change}>
                                                         <option value>0</option>
                                                         <option>1</option>
                                                         <option>2</option>
@@ -941,7 +1177,7 @@ class HomePage extends React.Component {
                                                 }
 
 
-                                                <button type="submit" onClick={this.toDocuments} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
+                                                <button type="submit" onClick={this.apiCall} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
                                             </form>
                                         </div>
                                     </TabPanel>
