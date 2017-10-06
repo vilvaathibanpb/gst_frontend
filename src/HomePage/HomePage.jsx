@@ -22,8 +22,19 @@ class HomePage extends React.Component {
         super(props);
         const _this = this;
         const userItem = JSON.parse(localStorage.getItem('user'));
+<<<<<<< HEAD
         const personalDetailsItem = JSON.parse(JSON.stringify(localStorage.getItem('personalDetails')));
         const businessDetailsItem = JSON.parse(JSON.stringify(localStorage.getItem('businessDetails')));
+=======
+        let personalDetailsItem, businessDetailsItem;
+        if(localStorage.getItem('personalDetails')){
+            personalDetailsItem = JSON.parse(localStorage.getItem('personalDetails'));
+            console.log(personalDetailsItem);
+        }
+        if(localStorage.getItem('businessDetails')){
+            businessDetailsItem = JSON.parse(localStorage.getItem('businessDetails'));
+        }
+>>>>>>> 1e438f9fbc0b48e41cc476b1e36fff47c1139ded
         var userItemResult = userItem['result'];
         this.state = {
             personal: {
@@ -89,7 +100,7 @@ class HomePage extends React.Component {
                 branch2_type: "rent_agreement",
 
             },
-            branchAddresses: ["vilva"],
+            branchAddresses: [],
             tabIndex: 0,
             checkBranchFields: false,
             emailFormat: false,
@@ -130,14 +141,14 @@ class HomePage extends React.Component {
                         this.state.branchAddresses = address;
                         this.setState({ tabIndex: 2 });
                         console.log(this.state , "vilva", address);
-                        localStorage.setItem("branchadressCount", this.state.branchAddresses);
-                        localStorage.setItem("businessDetails", business);
+                        localStorage.setItem("branchadressCount",JSON.stringify(this.state.branchAddresses));
+                        localStorage.setItem("businessDetails", JSON.stringify(business));
                     }
                 }
                
             }
             else {
-                localStorage.setItem("businessDetails", business);
+                localStorage.setItem("businessDetails", JSON.stringify(business));
                 console.log("saving");
                 this.setState({ tabIndex: 2 });
             }
@@ -155,7 +166,7 @@ class HomePage extends React.Component {
             this.setState({ emailFormat: true });
         }
         if (personal.name && personal.mobile && personal.email && personal.dob && personal.aadhar) {
-            localStorage.setItem("personalDetails", personal);
+            localStorage.setItem("personalDetails", JSON.stringify(personal));
             this.setState({ tabIndex: 1 });
         }
     }
