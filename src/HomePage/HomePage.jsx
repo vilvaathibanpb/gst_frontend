@@ -22,8 +22,8 @@ class HomePage extends React.Component {
         super(props);
         const _this = this;
         const userItem = JSON.parse(localStorage.getItem('user'));
-        const personalDetailsItem = JSON.parse(localStorage.getItem('personalDetails'));
-        const businessDetailsItem = JSON.parse(localStorage.getItem('businessDetails'));
+        const personalDetailsItem = JSON.parse(JSON.stringify(localStorage.getItem('personalDetails')));
+        const businessDetailsItem = JSON.parse(JSON.stringify(localStorage.getItem('businessDetails')));
         var userItemResult = userItem['result'];
         this.state = {
             personal: {
