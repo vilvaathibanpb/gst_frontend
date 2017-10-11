@@ -1,7 +1,6 @@
 import React from 'react';
 import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { history } from '../_helpers';
 import { alertActions } from '../_actions';
 import { PrivateRoute } from '../_components';
@@ -39,11 +38,12 @@ class App extends React.Component {
                 <HomeContactUs />
                 <Footer />
                 <Router history={history}>
-                            <div>
-                                 <PrivateRoute exact path="/home" component={HomePage} /> 
-                                <Route path="/login" component={LoginPage} />
-                                <Route path="/register" component={RegisterPage} />
-                            </div>
+                    <div>
+                        <PrivateRoute exact path="/home" component={HomePage} /> 
+                        {/* <PrivateRoute exact path="/payment" component={Payment} />  */}
+                        <Route path="/login" component={LoginPage} />
+                        <Route path="/register" component={RegisterPage} />
+                    </div>
                 </Router>
             </div>
         );
