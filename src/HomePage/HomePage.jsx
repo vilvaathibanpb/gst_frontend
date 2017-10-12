@@ -22,7 +22,7 @@ class HomePage extends React.Component {
         super(props);
         const _this = this;
         const userItem = JSON.parse(localStorage.getItem('user'));
-        let personalDetailsItem = {}, businessDetailsItem = {};
+        let personalDetailsItem = {}, businessDetailsItem = {}, documentsDetailsItem = {};
         if (localStorage.getItem('personalDetails')) {
             personalDetailsItem = JSON.parse(localStorage.getItem('personalDetails'));
             console.log(personalDetailsItem);
@@ -30,6 +30,10 @@ class HomePage extends React.Component {
         if (localStorage.getItem('businessDetails')) {
             businessDetailsItem = JSON.parse(localStorage.getItem('businessDetails'));
         }
+        if (localStorage.getItem("documentDetails")) {
+            documentsDetailsItem = JSON.parse(localStorage.getItem('documentDetails'));
+        }
+
         var userItemResult = userItem['result'];
         this.state = {
             personal: {
@@ -53,48 +57,48 @@ class HomePage extends React.Component {
                 branchNo: 0
             },
             document: {
-                photo_success: false,
-                photo_error: false,
-                photo_errormsg: "",
-                photo_url: "",
-                pan_i_success: false,
-                pan_i_error: false,
-                pan_i_errormsg: "",
-                pan_i_url: "",
-                pan_b_success: false,
-                pan_b_error: false,
-                pan_b_errormsg: "",
-                pan_b_url: "",
-                rent_success: false,
-                rent_error: false,
-                rent_errormsg: "",
-                rent_url: "",
-                rent_type: "rent_agreement",
-                address_success: false,
-                address_error: false,
-                address_errormsg: "",
-                address_url: "",
-                address_type: "aadhar",
-                bank_success: false,
-                bank_error: false,
-                bank_errormsg: "",
-                bank_url: "",
-                bank_type: "cancelled_cheque",
-                optional_success: false,
-                optional_error: false,
-                optional_errormsg: "",
-                optional_url: "",
-                optional_type: "Optional",
-                branch1_success: false,
-                branch1_error: false,
-                branch1_errormsg: "",
-                branch1_url: "",
-                branch1_type: "rent_agreement",
-                branch2_success: false,
-                branch2_error: false,
-                branch2_errormsg: "",
-                branch2_url: "",
-                branch2_type: "rent_agreement",
+                photo_success: documentsDetailsItem['photo_success'] ? documentsDetailsItem['photo_success'] : false,
+                photo_error: documentsDetailsItem['photo_error'] ? documentsDetailsItem['photo_error'] : false,
+                photo_errormsg: documentsDetailsItem['photo_errormsg'] ? documentsDetailsItem['photo_errormsg'] : "",
+                photo_url: documentsDetailsItem['photo_url'] ? documentsDetailsItem['photo_url'] : "",
+                pan_i_success: documentsDetailsItem['pan_i_success'] ? documentsDetailsItem['pan_i_success'] : false,
+                pan_i_error: documentsDetailsItem['pan_i_error'] ? documentsDetailsItem['pan_i_error'] : false,
+                pan_i_errormsg: documentsDetailsItem['pan_i_errormsg'] ? documentsDetailsItem['pan_i_errormsg'] : "",
+                pan_i_url: documentsDetailsItem['pan_i_url'] ? documentsDetailsItem['pan_i_url'] : "",
+                pan_b_success: documentsDetailsItem['pan_b_success'] ? documentsDetailsItem['pan_b_success'] : false,
+                pan_b_error: documentsDetailsItem['pan_b_error'] ? documentsDetailsItem['pan_b_error'] : false,
+                pan_b_errormsg: documentsDetailsItem['pan_b_errormsg'] ? documentsDetailsItem['pan_b_errormsg'] : "",
+                pan_b_url: documentsDetailsItem['pan_b_url'] ? documentsDetailsItem['pan_b_url'] : "",
+                rent_success: documentsDetailsItem['rent_success'] ? documentsDetailsItem['rent_success'] : false,
+                rent_error: documentsDetailsItem['rent_error'] ? documentsDetailsItem['rent_error'] : false,
+                rent_errormsg: documentsDetailsItem['rent_errormsg'] ? documentsDetailsItem['rent_errormsg'] : "",
+                rent_url: documentsDetailsItem['rent_url'] ? documentsDetailsItem['rent_url'] : "",
+                rent_type: documentsDetailsItem['rent_type'] ? documentsDetailsItem['rent_type'] : "rent_agreement",
+                address_success: documentsDetailsItem['address_success'] ? documentsDetailsItem['address_success'] : false,
+                address_error: documentsDetailsItem['address_error'] ? documentsDetailsItem['address_error'] : false,
+                address_errormsg: documentsDetailsItem['address_errormsg'] ? documentsDetailsItem['address_errormsg'] : "",
+                address_url: documentsDetailsItem['address_url'] ? documentsDetailsItem['address_url'] : "",
+                address_type: documentsDetailsItem['address_type'] ? documentsDetailsItem['address_type'] : "aadhar",
+                bank_success: documentsDetailsItem['bank_success'] ? documentsDetailsItem['bank_success'] : false,
+                bank_error: documentsDetailsItem['bank_error'] ? documentsDetailsItem['bank_error'] : false,
+                bank_errormsg: documentsDetailsItem['bank_errormsg'] ? documentsDetailsItem['bank_errormsg'] : "",
+                bank_url: documentsDetailsItem['bank_url'] ? documentsDetailsItem['bank_url'] : "",
+                bank_type: documentsDetailsItem['bank_type'] ? documentsDetailsItem['bank_type'] : "cancelled_cheque",
+                optional_success: documentsDetailsItem['optional_success'] ? documentsDetailsItem['optional_success'] : false,
+                optional_error: documentsDetailsItem['optional_error'] ? documentsDetailsItem['optional_error'] : false,
+                optional_errormsg: documentsDetailsItem['optional_errormsg'] ? documentsDetailsItem['optional_errormsg'] : "",
+                optional_url: documentsDetailsItem['optional_url'] ? documentsDetailsItem['optional_url'] : "",
+                optional_type: documentsDetailsItem['optional_type'] ? documentsDetailsItem['optional_type'] : "Optional",
+                branch1_success: documentsDetailsItem['branch1_success'] ? documentsDetailsItem['branch1_success'] : false,
+                branch1_error: documentsDetailsItem['branch1_error'] ? documentsDetailsItem['branch1_error'] : false,
+                branch1_errormsg: documentsDetailsItem['branch1_errormsg'] ? documentsDetailsItem['branch1_errormsg'] : "",
+                branch1_url: documentsDetailsItem['branch1_url'] ? documentsDetailsItem['branch1_url'] : "",
+                branch1_type: documentsDetailsItem['branch1_type'] ? documentsDetailsItem['branch1_type'] : "rent_agreement",
+                branch2_success: documentsDetailsItem['branch2_success'] ? documentsDetailsItem['branch2_success'] : false,
+                branch2_error: documentsDetailsItem['branch2_error'] ? documentsDetailsItem['branch2_error'] : false,
+                branch2_errormsg: documentsDetailsItem['branch2_errormsg'] ? documentsDetailsItem['branch2_errormsg'] : "",
+                branch2_url: documentsDetailsItem['branch2_url'] ? documentsDetailsItem['branch2_url'] : "",
+                branch2_type: documentsDetailsItem['branch2_type'] ? documentsDetailsItem['branch2_type'] : "rent_agreement",
 
             },
             branchAddresses: [],
@@ -102,7 +106,8 @@ class HomePage extends React.Component {
             checkBranchFields: false,
             emailFormat: false,
             submittedPersonalDetails: false,
-            submittedBusinessDetails: false
+            submittedBusinessDetails: false,
+            paymentErrorMessage: ''
         };
         this.toBusinessDetails = this.toBusinessDetails.bind(this);
         this.toDocuments = this.toDocuments.bind(this);
@@ -806,7 +811,7 @@ class HomePage extends React.Component {
                 "document_url": document.optional_url
             })
         }
-
+        const docsItem = localStorage.setItem("documentDetails", JSON.stringify(this.state.document));
         const user = JSON.parse(localStorage.getItem("user")).result;
         const collectedData = {
             "user_id": user.id,
@@ -815,8 +820,8 @@ class HomePage extends React.Component {
             "mobile": personal.mobile,
             "birthdate": personal.dob,
             "aadhar_no": personal.aadhar,
-            "business_type": "new",
-            "business_category": "old",
+            "business_type": business.businessType,
+            "business_category": business.businessCategory,
             "business_name": business.businessName,
             // "date_of_incorporation" : "02/02/1992",
             "trade_name": business.tradeName,
@@ -828,13 +833,14 @@ class HomePage extends React.Component {
             headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode },
             body: JSON.stringify(collectedData)
         };
+
         console.log(collectedData);
         return fetch("http://gst.edocketapp.com/api/v0/business", requestOptions)
             .then(response => {
                 if (!response.ok) {
+                    this.setState({ paymentErrorMessage: "Error in uploading documnets please try after some time" });
                     return Promise.reject(response.statusText);
                 }
-
                 return response.json();
             })
             .then(user => {
@@ -843,11 +849,66 @@ class HomePage extends React.Component {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 if (user) {
                     console.log(user);
+                    this.moveToPay(user);
                 }
 
                 return user;
             });
 
+    }
+    moveToPay(user) {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode }
+        };
+        var payment = user.data;
+        console.log(payment);
+        const url = "http://gst.edocketapp.com/api/v0/business/pay/?user_id=" + payment.request[0].user_id + "&request_id=" + payment.request[0].id + "&amount=" + payment.request[0].amount;
+
+        return fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    this.setState({ paymentErrorMessage: "Error in uploading documnets please try after some time" });
+                    return Promise.reject(response.statusText);
+                }
+                return response.json();
+            })
+            .then(user => {
+                // login successful if there's a jwt token in the response
+                // if (user && user.token) {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                if (user) {
+                    console.log(user);
+                    var payment = user.data;
+
+                    var form = document.createElement('form');
+                    form.method = "POST";
+                    form.action = payment.url;
+                    console.log(payment.url);
+                    var keys = Object.keys(payment.options);
+                    console.log(keys);
+                    for (var i = 0; i < keys.length; i++) {
+                        var el = document.createElement("input");
+                        el.type = 'hidden';
+                        el.value = payment.options[keys[i]];
+                        el.name = keys[i];
+                        form.appendChild(el);
+                    }
+                    console.log(form);
+                    // _.forEach(payment.options,function(value,key){
+                    // formData.append(key,value);
+                    //     var el = document.createElement("input");
+                    //     el.type = 'hidden';
+                    //     el.value = value;
+                    //     el.name = key;
+                    //     form.appendChild(el);
+                    // });
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+
+                return user;
+            });
     }
 
     render() {
@@ -1205,6 +1266,9 @@ class HomePage extends React.Component {
 
 
                                                 <button type="submit" onClick={this.apiCall} style={{ background: '#d5bd85', marginTop: '5vh', borderRadius: 0, border: 'none', color: '#fff', width: '60%', marginBottom: '35%' }} className="btn btn-default pull-right">NEXT</button>
+                                                {this.state.paymentErrorMessage &&
+                                                    <h4 className="errorField">{this.state.paymentErrorMessage}</h4>
+                                                }
                                             </form>
                                         </div>
                                     </TabPanel>

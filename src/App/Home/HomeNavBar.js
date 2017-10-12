@@ -55,11 +55,12 @@ export default class HomeNavBar extends React.Component {
 
 									{localStorage.getItem('user') &&
 										<Route>
-											<ButtonToolbar>
+											{/* <ButtonToolbar>
 												<DropdownButton bsSize="large" title={userItemResult.hasOwnProperty("name") ? userItemResult['name']:''} id="dropdown-size-large">
 													<MenuItem onClick={this.logout} eventKey="1">Logout</MenuItem>
 												</DropdownButton>
-											</ButtonToolbar>
+											</ButtonToolbar> */}
+											<LinkContainer onClick={this.logout} to="/" ><span className="nav-color">Logout</span></LinkContainer>
 										</Route>
 									}
 								</Switch>

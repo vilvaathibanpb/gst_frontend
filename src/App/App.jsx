@@ -15,6 +15,9 @@ import HomeTaxTypes from "./Home/HomeTaxTypes";
 import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
+import { LiveStatus } from '../LiveStatus';
+import { Payment } from '../Payment';
+
 
 class App extends React.Component {
     constructor(props) {
@@ -39,11 +42,15 @@ class App extends React.Component {
                 <HomeContactUs />
                 <Footer />
                 <Router history={history}>
-                            <div>
-                                 <PrivateRoute exact path="/home" component={HomePage} /> 
-                                <Route path="/login" component={LoginPage} />
-                                <Route path="/register" component={RegisterPage} />
-                            </div>
+                    {/* <div> */}
+                    <Switch>
+                        <PrivateRoute exact path="/home" component={HomePage} />
+                        <Route path="/payment/success/callback" component={LiveStatus} />
+                        <Route path="/payment/failure/callback" component={Payment} />
+                        <Route path="/login" component={LoginPage} />
+                        <Route path="/register" component={RegisterPage} />
+                    </Switch>
+                    {/* </div> */}
                 </Router>
             </div>
         );
