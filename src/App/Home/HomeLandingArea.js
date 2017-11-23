@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { history } from '../../_helpers';
+import Hands from '../../assets/img/hands.png';
+import Logo from '../../assets/img/logo.png';
 
 
 class HomeLandingArea extends React.Component {
@@ -19,8 +21,8 @@ class HomeLandingArea extends React.Component {
     return (
         <div className="col-sm-12 nav-bg" style={{padding: '0%', margin: '0%'}}>
 			<div className="col-sm-6" style={{backgroundColor: '#d5bd85', position: 'relative'}}>
-				<img src="assets/img/hands.png" style={{height: 315, width: 702}} className="img-responsive" />
-				<a href="https://www.dockettech.com/" className="logo-pc"><img src="assets/img/logo.png" style={{position: 'absolute', top: '-9%', left: '5%', height: 133, padding: 11}} /></a>
+				<img src={Hands} style={{height: 315, width: 702}} className="img-responsive" />
+				<a href="https://www.dockettech.com/" className="logo-pc"><img src={Logo} style={{position: 'absolute', top: '-9%', left: '5%', height: 133, padding: 11}} /></a>
 				<div className="col-sm-2" />
 				<div className="col-sm-8">
 					<h1 style={{fontSize: 40, color: '#3c3c54'}} ><b>GST @ Rs.1399/-</b></h1>

@@ -19,7 +19,15 @@ module.exports = {
                 query: {
                     presets: ['react', 'es2015', 'stage-3']
                 }
+            },
+            {
+                test: /\.(png|jpg|jpeg|svg)$/,
+                loader: 'url-loader'
+            }, 
+            {
+                rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader'] }]
             }
+
         ]
     },
     plugins: [new HtmlWebpackPlugin({

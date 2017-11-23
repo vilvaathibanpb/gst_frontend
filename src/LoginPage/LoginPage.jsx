@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { userActions } from '../_actions';
 import { App } from '../App';
+import GST from '../assets/img/GST.svg';
+
 
 class LoginPage extends React.Component {
     constructor(props) {
@@ -123,7 +125,7 @@ class LoginPage extends React.Component {
                     <div className="row" style={{background: '#fff', margin: '10vh 20vw', height: '80vh'}}>
                         <div className="col-sm-12" style={{padding: 0}}>
                             <div className="col-sm-6 logo-pc" style={{background: '#d5bd85', height: '80vh', padding: 0}}>
-                                <img src="assets/img/GST.svg" className="img-responsive" />
+                                <img src={GST} className="img-responsive" />
                                 <h3 style={{width: '90%', fontSize: 16, marginTop: 0, textAlign: 'justify!important', marginLeft: '5%'}}>Get registered for GST today in the most simple, easy and fast way. The documents we need from you are:</h3>
                                 <ul style={{fontSize: 16, marginLeft: '25%', width: '50%', listStyle: 'disc', marginTop: '5vh'}}>
                                     <li>Photograph</li>
