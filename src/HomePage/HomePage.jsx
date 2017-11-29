@@ -7,6 +7,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import DataIntro from "./Data Collection/DataIntro";
 import PersonalDetails from "./Data Collection/PersonalDetails";
 import BusinessDetails from "./Data Collection/BusinessDetails";
+import { base_url } from '../_helpers';
+
 // import DataNavMenu from "./Data Collection/DataNavMenu";
 
 
@@ -15,6 +17,148 @@ let validImageTypes = ['png', 'jpeg', 'jpg'];
 let validDocTypes = ['doc', 'docx', 'pdf'];
 let validTypes = ['pdf', 'png', 'jpeg', 'jpg'];
 let validRentTypes = ['pdf', 'png', 'jpeg', 'jpg', 'doc', 'docx'];
+let states = [
+    {
+        "id": 1,
+        "name": "Maharashtra"
+    },
+    {
+        "id": 2,
+        "name": "Uttar pradesh"
+    },
+    {
+        "id": 3,
+        "name": "Gujarat"
+    },
+    {
+        "id": 4,
+        "name": "Telangana"
+    },
+    {
+        "id": 5,
+        "name": "Jharkhand"
+    },
+    {
+        "id": 6,
+        "name": "Andhra pradesh"
+    },
+    {
+        "id": 7,
+        "name": "Kerala"
+    },
+    {
+        "id": 8,
+        "name": "West bengal"
+    },
+    {
+        "id": 9,
+        "name": "Karnataka"
+    },
+    {
+        "id": 10,
+        "name": "Tripura"
+    },
+    {
+        "id": 11,
+        "name": "Mizoram"
+    },
+    {
+        "id": 12,
+        "name": "Rajasthan"
+    },
+    {
+        "id": 13,
+        "name": "Madhya pradesh"
+    },
+    {
+        "id": 14,
+        "name": "Chhattisgarh"
+    },
+    {
+        "id": 15,
+        "name": "Punjab"
+    },
+    {
+        "id": 16,
+        "name": "Jammu and kashmir"
+    },
+    {
+        "id": 17,
+        "name": "Tamil nadu"
+    },
+    {
+        "id": 18,
+        "name": "Bihar"
+    },
+    {
+        "id": 19,
+        "name": "Uttarakhand"
+    },
+    {
+        "id": 20,
+        "name": "Haryana"
+    },
+    {
+        "id": 21,
+        "name": "Odisha"
+    },
+    {
+        "id": 22,
+        "name": "Assam"
+    },
+    {
+        "id": 23,
+        "name": "Chandigarh"
+    },
+    {
+        "id": 24,
+        "name": "Delhi"
+    },
+    {
+        "id": 25,
+        "name": "Nagaland"
+    },
+    {
+        "id": 26,
+        "name": "Manipur"
+    },
+    {
+        "id": 27,
+        "name": "Puducherry"
+    },
+    {
+        "id": 28,
+        "name": "Himachal pradesh"
+    },
+    {
+        "id": 29,
+        "name": "Goa"
+    },
+    {
+        "id": 30,
+        "name": "Arunachal pradesh"
+    },
+    {
+        "id": 31,
+        "name": "Meghalaya"
+    },
+    {
+        "id": 32,
+        "name": "Andaman and nicobar islands"
+    },
+    {
+        "id": 33,
+        "name": "Dadra and nagar haveli"
+    },
+    {
+        "id": 34,
+        "name": "Sikkim"
+    },
+    {
+        "id": 35,
+        "name": "Daman and diu"
+    }
+]
 
 class HomePage extends React.Component {
 
@@ -61,34 +205,48 @@ class HomePage extends React.Component {
                 photo_error: documentsDetailsItem['photo_error'] ? documentsDetailsItem['photo_error'] : false,
                 photo_errormsg: documentsDetailsItem['photo_errormsg'] ? documentsDetailsItem['photo_errormsg'] : "",
                 photo_url: documentsDetailsItem['photo_url'] ? documentsDetailsItem['photo_url'] : "",
+                photo_mime: documentsDetailsItem['photo_mime'] ? documentsDetailsItem['photo_mime'] : "",
+                photo_size: documentsDetailsItem['photo_size'] ? documentsDetailsItem['photo_size'] : "",
                 pan_i_success: documentsDetailsItem['pan_i_success'] ? documentsDetailsItem['pan_i_success'] : false,
                 pan_i_error: documentsDetailsItem['pan_i_error'] ? documentsDetailsItem['pan_i_error'] : false,
                 pan_i_errormsg: documentsDetailsItem['pan_i_errormsg'] ? documentsDetailsItem['pan_i_errormsg'] : "",
                 pan_i_url: documentsDetailsItem['pan_i_url'] ? documentsDetailsItem['pan_i_url'] : "",
+                pan_i_mime: documentsDetailsItem['pan_i_mime'] ? documentsDetailsItem['pan_i_mime'] : "",
+                pan_i_size: documentsDetailsItem['pan_i_size'] ? documentsDetailsItem['pan_i_size'] : "",
                 pan_b_success: documentsDetailsItem['pan_b_success'] ? documentsDetailsItem['pan_b_success'] : false,
                 pan_b_error: documentsDetailsItem['pan_b_error'] ? documentsDetailsItem['pan_b_error'] : false,
                 pan_b_errormsg: documentsDetailsItem['pan_b_errormsg'] ? documentsDetailsItem['pan_b_errormsg'] : "",
                 pan_b_url: documentsDetailsItem['pan_b_url'] ? documentsDetailsItem['pan_b_url'] : "",
+                pan_b_mime: documentsDetailsItem['pan_b_mime'] ? documentsDetailsItem['pan_b_mime'] : "",
+                pan_b_size: documentsDetailsItem['pan_b_size'] ? documentsDetailsItem['pan_b_size'] : "",
                 rent_success: documentsDetailsItem['rent_success'] ? documentsDetailsItem['rent_success'] : false,
                 rent_error: documentsDetailsItem['rent_error'] ? documentsDetailsItem['rent_error'] : false,
                 rent_errormsg: documentsDetailsItem['rent_errormsg'] ? documentsDetailsItem['rent_errormsg'] : "",
                 rent_url: documentsDetailsItem['rent_url'] ? documentsDetailsItem['rent_url'] : "",
                 rent_type: documentsDetailsItem['rent_type'] ? documentsDetailsItem['rent_type'] : "rent_agreement",
+                rent_mime: documentsDetailsItem['rent_mime'] ? documentsDetailsItem['rent_mime'] : "",
+                rent_size: documentsDetailsItem['rent_size'] ? documentsDetailsItem['rent_size'] : "",
                 address_success: documentsDetailsItem['address_success'] ? documentsDetailsItem['address_success'] : false,
                 address_error: documentsDetailsItem['address_error'] ? documentsDetailsItem['address_error'] : false,
                 address_errormsg: documentsDetailsItem['address_errormsg'] ? documentsDetailsItem['address_errormsg'] : "",
                 address_url: documentsDetailsItem['address_url'] ? documentsDetailsItem['address_url'] : "",
                 address_type: documentsDetailsItem['address_type'] ? documentsDetailsItem['address_type'] : "aadhar",
+                address_mime: documentsDetailsItem['address_mime'] ? documentsDetailsItem['address_mime'] : "",
+                address_size: documentsDetailsItem['address_size'] ? documentsDetailsItem['address_size'] : "",
                 bank_success: documentsDetailsItem['bank_success'] ? documentsDetailsItem['bank_success'] : false,
                 bank_error: documentsDetailsItem['bank_error'] ? documentsDetailsItem['bank_error'] : false,
                 bank_errormsg: documentsDetailsItem['bank_errormsg'] ? documentsDetailsItem['bank_errormsg'] : "",
                 bank_url: documentsDetailsItem['bank_url'] ? documentsDetailsItem['bank_url'] : "",
                 bank_type: documentsDetailsItem['bank_type'] ? documentsDetailsItem['bank_type'] : "cancelled_cheque",
+                bank_mime: documentsDetailsItem['bank_mime'] ? documentsDetailsItem['bank_mime'] : "",
+                bank_size: documentsDetailsItem['bank_size'] ? documentsDetailsItem['bank_size'] : "",
                 optional_success: documentsDetailsItem['optional_success'] ? documentsDetailsItem['optional_success'] : false,
                 optional_error: documentsDetailsItem['optional_error'] ? documentsDetailsItem['optional_error'] : false,
                 optional_errormsg: documentsDetailsItem['optional_errormsg'] ? documentsDetailsItem['optional_errormsg'] : "",
                 optional_url: documentsDetailsItem['optional_url'] ? documentsDetailsItem['optional_url'] : "",
                 optional_type: documentsDetailsItem['optional_type'] ? documentsDetailsItem['optional_type'] : "Optional",
+                optional_mime: documentsDetailsItem['optional_mime'] ? documentsDetailsItem['optional_mime'] : "",
+                optional_size: documentsDetailsItem['optional_size'] ? documentsDetailsItem['optional_size'] : "",
                 branch1_success: documentsDetailsItem['branch1_success'] ? documentsDetailsItem['branch1_success'] : false,
                 branch1_error: documentsDetailsItem['branch1_error'] ? documentsDetailsItem['branch1_error'] : false,
                 branch1_errormsg: documentsDetailsItem['branch1_errormsg'] ? documentsDetailsItem['branch1_errormsg'] : "",
@@ -550,6 +708,8 @@ class HomePage extends React.Component {
     onDrop(files, type) {
         const user = JSON.parse(localStorage.getItem("user")).result;
         const { document } = this.state;
+        let file_type = (files[0].name.split('.'));
+        let file_ext = file_type[file_type.length - 1];
         console.log(files);
         const Base64 = { _keyStr: "HC6V61pIoCTf9YcFn77fTqc2s16GG8bvT8S4IUKQPayNEDcrUkwXet76EEfr9n+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
         const object_key = Base64.encode(files[0].name);
@@ -558,7 +718,7 @@ class HomePage extends React.Component {
             headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode },
         };
 
-        return fetch('http://gst.edocketapp.com/api/v0/upload/s3_url?user_id=' + user.id + '&object_key=' + object_key, requestOptions)
+        return fetch(base_url + 'upload/s3_url?user_id=' + user.id + '&object_key=' + object_key, requestOptions)
             .then(response => {
                 if (!response.ok) {
 
@@ -609,10 +769,12 @@ class HomePage extends React.Component {
                                 ...document,
                                 [type + "_success"]: true,
                                 [type + "_error"]: false,
-                                [type + "_url"]: user.data.scheme + '://' + user.data.url + '/' + object_key
+                                [type + "_url"]: user.data.scheme + '://' + user.data.url + '/' + object_key,
+                                [type + "_mime"]: file_ext,
+                                [type + "_size"]: files[0].size
                             }
                         });
-                        console.log(this.state)
+                        console.log(this.state, file_ext, files[0].size)
                         return response.json();
                     })
                 }
@@ -778,37 +940,51 @@ class HomePage extends React.Component {
         let docArray = [
             {
                 "document_name": "photograph",
-                "document_url": document.photo_url
+                "document_url": document.photo_url,
+                "mime_type": document.photo_mime,
+                "size": document.photo_size
             },
             {
                 "document_name": "pancard_individual",
-                "document_url": document.pan_i_url
+                "document_url": document.pan_i_url,
+                "mime_type": document.pan_i_mime,
+                "size": document.pan_i_size
             },
             {
                 "document_name": document.rent_type,
-                "document_url": document.rent_url
+                "document_url": document.rent_url,
+                "mime_type": document.rent_mime,
+                "size": document.rent_size
             },
             {
                 "document_name": document.address_type,
-                "document_url": document.address_url
+                "document_url": document.address_url,
+                "mime_type": document.address_mime,
+                "size": document.address_size
             },
             {
                 "document_name": document.bank_type,
-                "document_url": document.bank_url
+                "document_url": document.bank_url,
+                "mime_type": document.bank_mime,
+                "size": document.bank_size
             }
         ]
 
         if (document.pan_b_success) {
             docArray.push({
                 "document_name": "pancard_business",
-                "document_url": document.pan_b_url
+                "document_url": document.pan_b_url,
+                "mime_type": document.pan_b_mime,
+                "size": document.pan_b_size
             })
         }
 
         if (document.optional_success) {
             docArray.push({
                 "document_name": document.optional_type,
-                "document_url": document.optional_url
+                "document_url": document.optional_url,
+                "mime_type": document.optional_mime,
+                "size": document.optional_size
             })
         }
         const docsItem = localStorage.setItem("documentDetails", JSON.stringify(this.state.document));
@@ -825,8 +1001,8 @@ class HomePage extends React.Component {
             "business_name": business.businessName,
             // "date_of_incorporation" : "02/02/1992",
             "trade_name": business.tradeName,
-            "address": addressArray,
-            "document": docArray
+            "address": JSON.stringify(addressArray),
+            "document": JSON.stringify(docArray)
         }
         const requestOptions = {
             method: 'POST',
@@ -835,7 +1011,7 @@ class HomePage extends React.Component {
         };
 
         console.log(collectedData);
-        return fetch("http://gst.edocketapp.com/api/v0/business", requestOptions)
+        return fetch(base_url + "business", requestOptions)
             .then(response => {
                 if (!response.ok) {
                     this.setState({ paymentErrorMessage: "Error in uploading documnets please try after some time" });
@@ -857,13 +1033,14 @@ class HomePage extends React.Component {
 
     }
     moveToPay(user) {
+        const userLocal = JSON.parse(localStorage.getItem("user")).result;
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': user.authcode }
+            headers: { 'Content-Type': 'application/json', 'key': 'docketgst', 'authcode': userLocal.authcode }
         };
         var payment = user.data;
         console.log(payment);
-        const url = "http://gst.edocketapp.com/api/v0/business/pay/?user_id=" + payment.request[0].user_id + "&request_id=" + payment.request[0].id + "&amount=" + payment.request[0].amount;
+        const url = base_url + "business/pay/?user_id=" + payment.request[0].user_id + "&request_id=" + payment.request[0].id + "&amount=" + payment.request[0].amount + "&payment_vendor=icici";
 
         return fetch(url, requestOptions)
             .then(response => {
@@ -970,20 +1147,20 @@ class HomePage extends React.Component {
         }
         return (
             <section style={{ background: 'linear-gradient(90deg, #d5bd85 50%, #3c3c54 50%)', position: "fixed", width: "100%", height: "100%", top: 0, left: 0, overflowY: "scroll" }}>
-                <div style={{ position: 'fixed', top: 0, left: '49%', zIndex: 99999, background: '#fff', height: '8vh', width: '50%', display: 'flex' }}>
+                <div className="data-head-width" style={{ position: 'fixed', top: 0, zIndex: 99999, background: '#fff', height: '8vh', display: 'flex' }}>
                     <h2 style={{ textAlign: 'left!important', fontSize: 16, fontWeight: 600, marginLeft: 30, marginBottom: 20 }}>DATA COLLECTION</h2>
-                    <Link to="/"><div onClick={this.handleClick} style={{ zIndex: '999999', fontSize: '24px', paddingTop: '6px', background: '#000', marginLeft: '22vw', width: 50, height: '8vh', color: '#fff' }}>X</div></Link>
+                    <Link to="/"><div onClick={this.handleClick} className="x-width" style={{ zIndex: '999999', fontSize: '24px', paddingTop: '6px', background: '#000', width: 50, height: '8vh', color: '#fff' }}>X</div></Link>
                 </div>
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12" style={{ padding: 0 }}>
                             <DataIntro />
-                            <div className="col-sm-6" style={{ background: '#3c3c54', height: '100vh', padding: 0, marginTop: '8vh' }}>
+                            <div className="col-sm-6 height-tabs" style={{ background: '#3c3c54', padding: 0, marginTop: '8vh' }}>
                                 <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
                                     <TabList>
                                         <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, marginLeft: 30, textAlign: 'left!important' }}>PERSONAL DETAILS</div></Tab>
-                                        {localStorage.getItem("personalDetails") && <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, textAlign: 'center!important' }}>BUSINESS DETAILS</div></Tab>}
-                                        {localStorage.getItem("businessDetails") && localStorage.getItem("personalDetails") && <Tab><div className="col-sm-3" style={{ color: '#fff', padding: 0, textAlign: 'right!important' }}>DOCUMENTS</div></Tab>}
+                                        {localStorage.getItem("personalDetails") && <Tab><div className="col-sm-3 margin-left-20px" style={{ color: '#fff', padding: 0, textAlign: 'center!important' }}>BUSINESS DETAILS</div></Tab>}
+                                        {localStorage.getItem("businessDetails") && localStorage.getItem("personalDetails") && <Tab><div className="col-sm-3 margin-left-20px" style={{ color: '#fff', padding: 0, textAlign: 'right!important' }}>DOCUMENTS</div></Tab>}
                                     </TabList>
                                     <TabPanel>
                                         <div className="col-sm-12" style={{ padding: 0 }}>
@@ -1042,14 +1219,14 @@ class HomePage extends React.Component {
                                                     <h4 className="errorField">Required</h4>
                                                 }
                                                 <div className="form-group">
-                                                    <select name="selectedState" value={business.businessType} className="form-control  data-form" onChange={this.handle2Change}>
+                                                    <select name="businessType" value={business.businessType} className="form-control  data-form" onChange={this.handle2Change}>
                                                         <option>Type 1</option>
                                                         <option>Type 2</option>
                                                         <option>Typ[e 3</option>
                                                     </select>
                                                 </div>
                                                 <div className="form-group">
-                                                    <select name="selectedState" value={business.businessCategory} className="form-control  data-form" onChange={this.handle2Change}>
+                                                    <select name="businessCategory" value={business.businessCategory} className="form-control  data-form" onChange={this.handle2Change}>
                                                         <option>Category 1</option>
                                                         <option>Category 2</option>
                                                         <option>Category 3</option>

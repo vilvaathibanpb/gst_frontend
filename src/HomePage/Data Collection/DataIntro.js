@@ -1,10 +1,11 @@
 import React from "react";
+import hands from '../../assets/img/hands.png';
 
 export default class DataIntro extends React.Component{
     render(){
         return(
             <div className="col-sm-6 logo-pc" style={{background: '#d5bd85', height: '100vh', padding: 0}}>
-                <img src="assets/img/hands.png" style={{height: 315, width: 702, marginLeft: '-5vw'}} className="img-responsive" />
+                <img src={hands} style={{height: 315, width: 702, marginLeft: '-5vw'}} className="img-responsive" />
                 <div className="col-sm-2" />
                 <div className="col-sm-8" style={{marginLeft: '-5vw'}}>
                     <h1 style={{fontSize: 40, color: '#3c3c54'}} align><b>GST @ Rs.1399/-</b></h1>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route , Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { history } from '../_helpers';
 import { alertActions } from '../_actions';
@@ -16,6 +16,9 @@ import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
 import { LiveStatus } from '../LiveStatus';
 import { Payment } from '../Payment';
+import io from 'socket.io-client';
+import {socket_url} from '../_helpers';
+let socket = io(socket_url);
 
 
 class App extends React.Component {
@@ -28,7 +31,7 @@ class App extends React.Component {
             dispatch(alertActions.clear());
         });
     }
-
+    
     render() {
         const { alert } = this.props;
         return (
@@ -44,8 +47,9 @@ class App extends React.Component {
                     {/* <div> */}
                     <Switch>
                         <PrivateRoute exact path="/home" component={HomePage} />
-                        <Route path="/payment/success/callback" component={LiveStatus} />
-                        <Route path="/payment/failure/callback" component={Payment} />
+                        <Route path="/payment/success" component={LiveStatus} />
+                        <Route path="/payment/fail" component={Payment} />>
+
                         <Route path="/login" component={LoginPage} />
                         <Route path="/register" component={RegisterPage} />
                     </Switch>

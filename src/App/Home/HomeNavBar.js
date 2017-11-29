@@ -13,6 +13,7 @@ import { NavbarBrand, ButtonToolbar, DropdownButton } from 'react-bootstrap/lib/
 import { Link, Router, Route, Switch } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { history } from '../../_helpers';
+import Logo from '../../assets/img/logo.png'
 
 //Components
 
@@ -35,7 +36,7 @@ export default class HomeNavBar extends React.Component {
 			<Navbar inverse collapseOnSelect style={{ marginBottom: '0px', border: '0px', borderRadius: '0px' }} className="nav-bg">
 				<Navbar.Header>
 					<Navbar.Brand>
-						<a href="https://www.dockettech.com/" className="logo-mobile"><img src="assets/img/logo.png" style={{ position: 'absolute', top: '-9%', left: '5%', height: 133, padding: 11, zIndex: 100 }} /></a>
+						<a href="https://www.dockettech.com/" className="logo-mobile"><img src={Logo} style={{ position: 'absolute', top: '-9%', left: '5%', height: 133, padding: 11, zIndex: 100 }} /></a>
 					</Navbar.Brand>
 					<Navbar.Toggle />
 				</Navbar.Header>

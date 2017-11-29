@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/index.jsx',
     output: {
         path: path.resolve('dist'),
-        filename: './bundle.js'
+        filename: 'bundle.js'
     },
     resolve: {
         extensions: ['.js', '.jsx']
@@ -23,7 +23,7 @@ module.exports = {
             {
                 test: /\.(png|jpg|jpeg|svg)$/,
                 loader: 'url-loader'
-            }, 
+            },
             {
                 rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader'] }]
             }
@@ -35,6 +35,9 @@ module.exports = {
         filename: 'index.html',
         inject: 'body'
     })],
+    node: {
+        fs: 'empty'
+    },
     devServer: {
         historyApiFallback: true
     }
