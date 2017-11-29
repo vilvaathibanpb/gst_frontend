@@ -4,8 +4,9 @@ import Hands from '../assets/img/hands.png';
 import Logo from '../assets/img/logo.png';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { history } from '../_helpers';
+import { history ,socket_url} from '../_helpers';
 import io from 'socket.io-client';
+const socket = io(socket_url);  
 
 
 
@@ -19,6 +20,12 @@ class LiveStatus extends React.Component {
         super(props);
         this.handleClick = this.handleClick.bind(this);
     }
+    componentDidMount() {
+        socket.on('request-live-R2017112828', function (data) {
+            console.log(JSON.parse(data));
+        })
+    }
+
     handleClick(e) {
         e.preventDefault();
         history.push("/home");

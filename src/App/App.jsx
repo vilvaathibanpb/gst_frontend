@@ -31,7 +31,11 @@ class App extends React.Component {
             dispatch(alertActions.clear());
         });
     }
-    
+    // componentDidMount() {
+    //     socket.on('request-live-R2017112828', function (data) {
+    //         console.log(data);
+    //     })
+    // }
     render() {
         const { alert } = this.props;
         return (
